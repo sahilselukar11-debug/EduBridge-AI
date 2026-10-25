@@ -1,0 +1,3063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>EduBridge AI</title>
+  <meta name="description" content="Smart Teaching · Personalized Learning. Complete EdTech platform for teachers to build 5E pedagogy lesson plans and students to diagnose knowledge gaps with adaptive quizzes." />
+  <meta property="og:title" content="EduBridge AI" />
+  <meta property="og:description" content="Smart Teaching · Personalized Learning. Complete EdTech platform for teachers to build 5E pedagogy lesson plans and students to diagnose knowledge gaps with adaptive quizzes." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    /* =========================================================
+       COLOR SYSTEM & DESIGN TOKENS
+       ========================================================= */
+    :root {
+      --bg:         #0F0E17;
+      --surface:    #1A1830;
+      --card:       #232138;
+      --card-2:     #2E2B4A;
+      --gold:       #E8B450;
+      --gold-2:     #C99A35;
+      --violet:     #7C6FE8;
+      --success:    #22C55E;
+      --s-bg:       rgba(34,197,94,0.12);
+      --danger:     #EF4444;
+      --d-bg:       rgba(239,68,68,0.12);
+      --warning:    #F59E0B;
+      --w-bg:       rgba(245,158,11,0.12);
+      --text:       #F0EEFF;
+      --muted:      #9891B8;
+      --border:     #2E2B50;
+      --ring-color: #22C55E;
+      --pct:        0;
+    }
+
+    [data-theme="light"] {
+      --bg:         #FAF7F2;
+      --surface:    #F2EDE4;
+      --card:       #FFFFFF;
+      --card-2:     #F5F0E8;
+      --gold:       #B8860B;
+      --gold-2:     #9A6F0A;
+      --violet:     #5B4FD4;
+      --success:    #166534;
+      --s-bg:       rgba(22,101,52,0.10);
+      --danger:     #991B1B;
+      --d-bg:       rgba(153,27,27,0.10);
+      --warning:    #92400E;
+      --w-bg:       rgba(146,64,14,0.10);
+      --text:       #1A1320;
+      --muted:      #6B5F7A;
+      --border:     #DDD5C8;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+      transition: background 0.2s ease, color 0.2s ease;
+      overflow-x: hidden;
+    }
+
+    .page {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 0 16px 24px 16px;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Compact viewport-constrained container for LP1 & LP2 */
+    .viewport-fixed-page {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 8px 14px 10px 14px;
+      height: 100vh;
+      max-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    /* BUTTONS */
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      color: #0F0E17;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 18px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.1s ease, filter 0.15s ease, opacity 0.2s ease;
+    }
+    .btn-gold:hover:not(:disabled) {
+      filter: brightness(1.06);
+    }
+    .btn-gold:active:not(:disabled) {
+      transform: scale(0.985);
+    }
+    .btn-gold:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      filter: grayscale(0.5);
+    }
+
+    .btn-violet {
+      background: var(--violet);
+      color: white;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 18px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: filter 0.15s ease;
+    }
+    .btn-violet:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn-outline {
+      border: 1.5px solid var(--gold);
+      color: var(--gold);
+      background: transparent;
+      border-radius: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn-outline:hover {
+      background: rgba(232, 180, 80, 0.1);
+    }
+
+    .btn-ghost {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: border-color 0.15s ease;
+    }
+    .btn-ghost:hover {
+      border-color: var(--gold);
+    }
+
+    .btn-icon {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .btn-icon:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* CARDS */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    }
+
+    /* INPUTS */
+    input, select, textarea {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 14px;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(232,180,80,0.15);
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    /* SCREEN TRANSITIONS */
+    .screen {
+      display: none;
+      animation: fadeUp 0.25s ease-out forwards;
+    }
+    .screen.active {
+      display: block;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* PROGRESS BAR */
+    .progress-track {
+      background: var(--surface);
+      height: 4px;
+      border-radius: 2px;
+      margin: 10px 0 16px 0;
+      overflow: hidden;
+      width: 100%;
+    }
+    .progress-fill {
+      background: linear-gradient(90deg, var(--gold), var(--gold-2));
+      height: 4px;
+      border-radius: 2px;
+      transition: width 0.35s ease;
+      width: 20%;
+    }
+
+    /* TOPBAR COMPONENT */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0 10px 0;
+      min-height: 48px;
+      margin-bottom: 6px;
+    }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topbar-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .step-pill {
+      font-size: 12px;
+      padding: 4px 9px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .theme-toggle-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 14px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .theme-toggle-btn:hover {
+      border-color: var(--gold);
+    }
+
+    .badge-errorbook {
+      background: var(--warning);
+      color: #0F0E17;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 12px;
+      padding: 2px 6px;
+      margin-left: 4px;
+    }
+
+    /* STAT PILLS */
+    .stat-pills-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin: 18px 0;
+      flex-wrap: wrap;
+    }
+    .stat-pill {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 550;
+      padding: 6px 11px;
+      border-radius: 20px;
+    }
+
+    /* SELECTION CHIPS */
+    .chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+    .chip:hover {
+      border-color: var(--gold);
+      color: var(--text);
+    }
+    .chip.active {
+      background: rgba(232, 180, 80, 0.15);
+      border-color: var(--gold);
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* ERROR & INFO BANNERS */
+    .info-banner {
+      border-left: 3px solid var(--gold);
+      background: var(--surface);
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .warn-banner {
+      border-left: 3px solid var(--warning);
+      background: var(--w-bg);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .error-banner {
+      border-left: 3px solid var(--danger);
+      background: var(--d-bg);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--danger);
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    /* MODAL OVERLAY & DRAWER */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-drawer {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      width: 100%;
+      max-width: 560px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 20px;
+      box-shadow: 0 -8px 32px rgba(0,0,0,0.4);
+      animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    /* SCORE RING CONIC GRADIENT */
+    .ring-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 16px 0;
+    }
+    .ring {
+      background: conic-gradient(var(--ring-color) calc(var(--pct) * 1%), var(--surface) 0);
+      border-radius: 50%;
+      width: 110px;
+      height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+    .ring-inner {
+      background: var(--card);
+      border-radius: 50%;
+      width: 86px;
+      height: 86px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .ring-score {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .ring-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+
+    /* QUESTION CARD & OPTIONS */
+    .quiz-opt-btn {
+      width: 100%;
+      text-align: left;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 14px;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      transition: all 0.15s ease;
+    }
+    .quiz-opt-btn:hover:not(:disabled) {
+      border-color: var(--gold);
+      background: var(--card-2);
+    }
+    .quiz-opt-btn.correct {
+      background: var(--s-bg) !important;
+      border-color: var(--success) !important;
+      color: var(--text) !important;
+      font-weight: 600;
+    }
+    .quiz-opt-btn.wrong {
+      background: var(--d-bg) !important;
+      border-color: var(--danger) !important;
+      color: var(--text) !important;
+    }
+
+    /* FIXED BOTTOM NAV */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 560px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 12px;
+      z-index: 100;
+    }
+    .nav-tab-btn {
+      background: transparent;
+      border: none;
+      border-top: 2px solid transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .nav-tab-btn.active {
+      color: var(--gold);
+      border-top-color: var(--gold);
+    }
+
+    /* PRINT STYLES */
+    @media print {
+      body { background: white !important; color: black !important; }
+      .topbar-right, .btn-gold, .btn-outline, .btn-ghost, .btn-icon, .theme-toggle-btn, .bottom-nav { display: none !important; }
+      .screen { display: none !important; }
+      #screen-lp2 { display: block !important; }
+      .card { border: 1px solid #ccc !important; box-shadow: none !important; background: white !important; }
+      .chip { border: 1px solid #aaa !important; color: black !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================
+       SCREEN 0 — ROLE SELECT
+       ========================================================= -->
+  <div id="screen-0" class="screen active">
+    <div class="page" style="display:flex; flex-direction:column; justify-content:center; min-height:100vh; padding-top:20px;">
+      
+      <div class="topbar">
+        <div></div>
+        <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle dark/light theme">🌙</button>
+      </div>
+
+      <!-- Center Logo Block -->
+      <div style="text-align:center; margin: 10px 0 16px 0;">
+        <div style="width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,var(--gold),var(--gold-2)); margin:0 auto 14px auto; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:30px; color:#0F0E17; box-shadow:0 8px 24px rgba(232,180,80,0.3);">
+          EB
+        </div>
+        <h1 style="font-size:28px; font-weight:800; margin:0 0 6px 0; letter-spacing:-0.5px;">EduBridge AI</h1>
+        <div style="color:var(--muted); font-size:14px; font-weight:500;">Smart Teaching · Personalized Learning</div>
+      </div>
+
+      <!-- 3 Stat Pills -->
+      <div class="stat-pills-row">
+        <span class="stat-pill">📚 2.1Cr+ Students</span>
+        <span class="stat-pill">👨‍🏫 1.08L+ Teachers</span>
+        <span class="stat-pill">🎯 5 AI Features</span>
+      </div>
+
+      <!-- Section Heading -->
+      <div style="margin-top:28px; margin-bottom:14px; text-align:center;">
+        <h2 style="font-size:18px; font-weight:700; margin:0;">Who are you?</h2>
+      </div>
+
+      <!-- Two Role Cards Side-by-Side -->
+      <div style="display:flex; gap:12px; justify-content:space-between; margin-bottom:24px;">
+        <!-- Teacher Role Card -->
+        <div id="role-card-teacher" onclick="selectRole('teacher')" class="card" style="flex:1; cursor:pointer; text-align:center; padding:18px 12px; transition:all 0.2s ease; border: 1.5px solid var(--border);">
+          <div style="font-size:36px; margin-bottom:8px;">👨‍🏫</div>
+          <div style="font-weight:700; font-size:16px; margin-bottom:4px;">Teacher</div>
+          <div style="font-size:12px; color:var(--muted); line-height:1.4;">Plan lessons, track class performance</div>
+        </div>
+
+        <!-- Student Role Card -->
+        <div id="role-card-student" onclick="selectRole('student')" class="card" style="flex:1; cursor:pointer; text-align:center; padding:18px 12px; transition:all 0.2s ease; border: 1.5px solid var(--border);">
+          <div style="font-size:36px; margin-bottom:8px;">🎓</div>
+          <div style="font-weight:700; font-size:16px; margin-bottom:4px;">Student</div>
+          <div style="font-size:12px; color:var(--muted); line-height:1.4;">Learn at your pace, track your gaps</div>
+        </div>
+      </div>
+
+      <!-- Continue CTA -->
+      <button id="btn-continue-role" onclick="handleRoleContinue()" class="btn-gold" disabled>
+        Continue →
+      </button>
+
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SCREEN 1S — STUDENT PROFILE
+       ========================================================= -->
+  <div id="screen-1s" class="screen">
+    <div class="page">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="btn-icon" onclick="showScreen('screen-0')" aria-label="Back">← Back</button>
+          <span class="topbar-title">Your Profile</span>
+        </div>
+        <div class="topbar-right">
+          <span class="step-pill">Step 1/5</span>
+          <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+        </div>
+      </div>
+
+      <div class="progress-track"><div class="progress-fill" style="width:20%;"></div></div>
+
+      <div class="card">
+        <h2 style="font-size:18px; font-weight:700; margin:0 0 16px 0;">Tell us about yourself</h2>
+
+        <!-- Full Name -->
+        <div class="form-group">
+          <label for="s-name">Full Name *</label>
+          <input type="text" id="s-name" placeholder="Enter your full name" required />
+        </div>
+
+        <!-- Class / Year -->
+        <div class="form-group">
+          <label for="s-class">Class / Year *</label>
+          <select id="s-class" onchange="toggleStudentOtherClass(this.value)">
+            <option value="">Select Class / Year</option>
+            <option value="Class 6">Class 6</option>
+            <option value="Class 7">Class 7</option>
+            <option value="Class 8">Class 8</option>
+            <option value="Class 9">Class 9</option>
+            <option value="Class 10">Class 10</option>
+            <option value="FY JC (11th)">FY JC (11th)</option>
+            <option value="SY JC (12th)">SY JC (12th)</option>
+            <option value="FY Degree">FY Degree</option>
+            <option value="SY Degree">SY Degree</option>
+            <option value="TY Degree">TY Degree</option>
+            <option value="Other">Other</option>
+          </select>
+          <input type="text" id="s-class-other" placeholder="Type your class" style="display:none; margin-top:8px;" />
+        </div>
+
+        <!-- Board / University -->
+        <div class="form-group">
+          <label for="s-board">Board / University *</label>
+          <select id="s-board" onchange="toggleStudentOtherBoard(this.value)">
+            <option value="">Select Board / University</option>
+            <option value="Maharashtra State Board">Maharashtra State Board</option>
+            <option value="CBSE">CBSE</option>
+            <option value="ICSE">ICSE</option>
+            <option value="Mumbai University">Mumbai University</option>
+            <option value="RTMNU Nagpur">RTMNU Nagpur</option>
+            <option value="Pune University">Pune University</option>
+            <option value="SPPU">SPPU</option>
+            <option value="Other">Other</option>
+          </select>
+          <input type="text" id="s-board-other" placeholder="Type your board/university" style="display:none; margin-top:8px;" />
+        </div>
+
+        <!-- Previous Result (% / CGPA toggle) -->
+        <div class="form-group">
+          <label>Previous Result *</label>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <div style="display:inline-flex; border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--surface);">
+              <button type="button" id="toggle-score-pct" onclick="setScoreType('percent')" style="border:none; padding:10px 14px; font-size:13px; font-weight:700; cursor:pointer; background:var(--gold); color:#0F0E17;">%</button>
+              <button type="button" id="toggle-score-cgpa" onclick="setScoreType('cgpa')" style="border:none; padding:10px 14px; font-size:13px; font-weight:700; cursor:pointer; background:transparent; color:var(--text);">CGPA</button>
+            </div>
+            <input type="number" id="s-score" placeholder="e.g. 85" min="0" max="100" step="0.1" style="flex:1;" />
+          </div>
+        </div>
+
+        <!-- Contact Number -->
+        <div class="form-group">
+          <label for="s-phone">Contact Number *</label>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:11px 12px; font-size:14px; font-weight:600; color:var(--muted);">+91</span>
+            <input type="tel" id="s-phone" placeholder="98765 43210" maxlength="10" style="flex:1;" />
+          </div>
+        </div>
+
+        <!-- Email Address -->
+        <div class="form-group">
+          <label for="s-email">Email Address <span style="color:var(--muted); font-weight:normal;">(Optional)</span></label>
+          <input type="email" id="s-email" placeholder="name@example.com" />
+        </div>
+
+        <!-- Info banner -->
+        <div class="info-banner">
+          <span>⚡</span>
+          <span>Your details personalize your learning path</span>
+        </div>
+
+        <div id="student-form-err" class="error-banner"></div>
+
+        <button onclick="handleStudentProfileSubmit()" class="btn-gold">Save & Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SCREEN 1T — TEACHER PROFILE
+       ========================================================= -->
+  <div id="screen-1t" class="screen">
+    <div class="page">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="btn-icon" onclick="showScreen('screen-0')" aria-label="Back">← Back</button>
+          <span class="topbar-title">Your Profile</span>
+        </div>
+        <div class="topbar-right">
+          <span class="step-pill">Step 1/3</span>
+          <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+        </div>
+      </div>
+
+      <div class="progress-track"><div class="progress-fill" style="width:33%;"></div></div>
+
+      <div class="card">
+        <h2 style="font-size:18px; font-weight:700; margin:0 0 16px 0;">Tell us about yourself</h2>
+
+        <!-- Full Name -->
+        <div class="form-group">
+          <label for="t-name">Full Name *</label>
+          <input type="text" id="t-name" placeholder="Prof. / Dr. / Teacher name" required />
+        </div>
+
+        <!-- Experience -->
+        <div class="form-group">
+          <label for="t-exp">Teaching Experience *</label>
+          <select id="t-exp">
+            <option value="">Select Experience</option>
+            <option value="Fresher (0–1 yr)">Fresher (0–1 yr)</option>
+            <option value="1–3 years">1–3 years</option>
+            <option value="3–7 years">3–7 years</option>
+            <option value="7–15 years">7–15 years</option>
+            <option value="15+ years">15+ years</option>
+          </select>
+        </div>
+
+        <!-- Institution Type -->
+        <div class="form-group">
+          <label for="t-inst-type">Institution Type *</label>
+          <select id="t-inst-type" onchange="toggleTeacherOtherInst(this.value)">
+            <option value="">Select Institution Type</option>
+            <option value="Government School">Government School</option>
+            <option value="Private School">Private School</option>
+            <option value="Jr. College">Jr. College</option>
+            <option value="Degree College">Degree College</option>
+            <option value="University">University</option>
+            <option value="Coaching Center">Coaching Center</option>
+            <option value="Other">Other</option>
+          </select>
+          <input type="text" id="t-inst-other" placeholder="Type institution type" style="display:none; margin-top:8px;" />
+        </div>
+
+        <!-- Institution Name -->
+        <div class="form-group">
+          <label for="t-inst-name">Institution Name *</label>
+          <input type="text" id="t-inst-name" placeholder="School or College name" />
+        </div>
+
+        <!-- Subjects multi-select chip grid -->
+        <div class="form-group">
+          <label>Subjects You Teach * <span style="color:var(--muted); font-size:11px;">(Tap to select)</span></label>
+          <div id="teacher-subjects-grid" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; margin-top:4px;">
+            <!-- JS will inject subjects chips -->
+          </div>
+          <input type="text" id="t-subject-other" placeholder="Type custom subject" style="display:none; margin-top:8px;" />
+        </div>
+
+        <!-- Contact & Email -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+          <div class="form-group">
+            <label for="t-phone">Contact Number *</label>
+            <input type="tel" id="t-phone" placeholder="98765 43210" maxlength="10" />
+          </div>
+          <div class="form-group">
+            <label for="t-email">Email *</label>
+            <input type="email" id="t-email" placeholder="teacher@edu.in" />
+          </div>
+        </div>
+
+        <div id="teacher-form-err" class="error-banner"></div>
+
+        <button onclick="handleTeacherProfileSubmit()" class="btn-gold">Save & Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SCREEN LP1 — LESSON PLAN BUILDER INPUT (NO SCROLLING)
+       ========================================================= -->
+  <div id="screen-lp1" class="screen">
+    <div class="viewport-fixed-page">
+      <div class="topbar" style="padding:6px 0; min-height:40px; margin-bottom:4px;">
+        <div class="topbar-left">
+          <button class="btn-icon" onclick="showScreen('screen-1t')" aria-label="Back">← Back</button>
+          <span class="topbar-title" style="font-size:15px;">Lesson Plan Builder</span>
+        </div>
+        <div class="topbar-right">
+          <button class="btn-icon" onclick="openErrorBookModal()">
+            📖 Error Book <span class="badge-errorbook" id="eb-badge-lp1">0</span>
+          </button>
+          <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+        </div>
+      </div>
+
+      <!-- Last plan restore banner -->
+      <div id="lp-restore-banner" style="display:none; background:var(--surface); border:1px solid var(--gold); border-radius:8px; padding:6px 10px; font-size:12px; margin-bottom:6px; align-items:center; justify-content:space-between;">
+        <span>📋 Restore last plan?</span>
+        <div style="display:flex; gap:6px;">
+          <button onclick="restoreLastPlan()" class="btn-icon" style="padding:2px 8px; font-size:11px; background:var(--gold); color:#0F0E17; font-weight:700;">Restore</button>
+          <button onclick="dismissLastPlanBanner()" class="btn-icon" style="padding:2px 8px; font-size:11px;">Dismiss</button>
+        </div>
+      </div>
+
+      <!-- Quick Preset Search -->
+      <div style="margin-bottom:6px;">
+        <input type="text" id="preset-search" placeholder="🔍 Search topics..." oninput="filterPresetChips(this.value)" style="padding:8px 12px; font-size:13px; height:34px;" />
+      </div>
+
+      <!-- Quick Presets Horizontal Scroll -->
+      <div id="preset-chips-scroll" style="display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; margin-bottom:8px; scrollbar-width:none; -webkit-overflow-scrolling:touch;">
+        <!-- Preset chips populated via JS -->
+      </div>
+
+      <!-- Input Form Card -->
+      <div class="card" style="padding:12px 14px; flex:1; display:flex; flex-direction:column; justify-content:space-between; margin-bottom:6px;">
+        
+        <div>
+          <!-- Row 1: Grade and Subject Dropdowns -->
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+            <div>
+              <label for="lp-grade" style="font-size:12px; margin-bottom:3px;">Grade *</label>
+              <select id="lp-grade" style="padding:8px 10px; font-size:13px; height:36px;" onchange="validateLessonInputs()">
+                <option value="Grade 5">Grade 5</option>
+                <option value="Grade 6">Grade 6</option>
+                <option value="Grade 7">Grade 7</option>
+                <option value="Grade 8">Grade 8</option>
+                <option value="Grade 9" selected>Grade 9</option>
+                <option value="Grade 10">Grade 10</option>
+                <option value="FY JC (11th)">FY JC (11th)</option>
+                <option value="SY JC (12th)">SY JC (12th)</option>
+              </select>
+            </div>
+            <div>
+              <label for="lp-subject" style="font-size:12px; margin-bottom:3px;">Subject *</label>
+              <select id="lp-subject" style="padding:8px 10px; font-size:13px; height:36px;" onchange="validateLessonInputs()">
+                <option value="Biology" selected>Biology</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="Physics">Physics</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Science">Science (General)</option>
+                <option value="History">History</option>
+                <option value="Geography">Geography</option>
+                <option value="English">English</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Marathi">Marathi</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Economics">Economics</option>
+                <option value="Political Science">Political Science</option>
+                <option value="EVS">EVS</option>
+                <option value="Commerce">Commerce</option>
+                <option value="Art">Art</option>
+                <option value="Physical Education">Physical Education</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Quick Subject Chips Horizontal Row -->
+          <div id="lp-subject-chips" style="display:flex; gap:4px; overflow-x:auto; padding-bottom:4px; margin-bottom:8px; scrollbar-width:none;">
+            <!-- JS populated chips -->
+          </div>
+
+          <!-- Row 2: Topic / Unit -->
+          <div style="margin-bottom:8px;">
+            <label for="lp-topic" style="font-size:12px; margin-bottom:3px;">Topic / Unit *</label>
+            <input type="text" id="lp-topic" value="Mitosis and Stages of Cell Division" placeholder="e.g. Mitosis and Stages of Cell Division" style="padding:8px 12px; font-size:13px; height:36px;" oninput="validateLessonInputs()" />
+          </div>
+
+          <!-- Row 3: Total Minutes and Pedagogy -->
+          <div style="display:grid; grid-template-columns: 100px 1fr; gap:8px; margin-bottom:6px;">
+            <div>
+              <label for="lp-minutes" style="font-size:12px; margin-bottom:3px;">Minutes *</label>
+              <input type="number" id="lp-minutes" value="45" min="1" max="180" placeholder="45" style="padding:8px 10px; font-size:13px; height:36px;" oninput="validateLessonInputs()" />
+            </div>
+            <div>
+              <label for="lp-pedagogy" style="font-size:12px; margin-bottom:3px;">Pedagogy Model *</label>
+              <select id="lp-pedagogy" style="padding:8px 10px; font-size:12px; height:36px;">
+                <option value="5e">5E Constructivist (Engage→Explore→Explain→Elaborate→Evaluate)</option>
+                <option value="direct">Direct Instruction (I Do→We Do→You Do)</option>
+                <option value="pbl">Problem-Based Learning (Hook→Explore→Solve→Reflect)</option>
+                <option value="flipped">Flipped Classroom (Review→Apply→Discuss→Assess)</option>
+                <option value="socratic">Socratic Method (Question→Hypothesis→Discussion→Conclusion)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <!-- Error Book Reminder (only if APP.errorBook.length > 0) -->
+          <div id="lp-errorbook-reminder" class="warn-banner" style="display:none; padding:6px 10px; margin-bottom:6px; font-size:11px;">
+            <div id="lp-eb-rem-text" style="font-weight:600; margin-bottom:4px;"></div>
+            <div id="lp-eb-chips-list" style="display:flex; gap:4px; flex-wrap:wrap;"></div>
+          </div>
+
+          <!-- Validation Error Alert -->
+          <div id="lp-val-error" class="error-banner" style="padding:6px 10px; margin-bottom:6px; font-size:12px;"></div>
+
+          <!-- CTA -->
+          <button id="btn-generate-lp" onclick="generateLessonPlan()" class="btn-gold" style="padding:10px 14px; font-size:14px;">
+            Generate Lesson Plan →
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SCREEN LP2 — LESSON PLAN OUTPUT (NO SCROLLING)
+       ========================================================= -->
+  <div id="screen-lp2" class="screen">
+    <div class="viewport-fixed-page">
+      <div class="topbar" style="padding:4px 0; min-height:36px; margin-bottom:4px;">
+        <div class="topbar-left" style="overflow:hidden;">
+          <button class="btn-icon" onclick="showScreen('screen-lp1')" aria-label="Edit">← Edit</button>
+          <span id="lp2-title" class="topbar-title" style="font-size:14px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width:210px;">
+            Biology — Mitosis
+          </span>
+        </div>
+        <div class="topbar-right">
+          <button class="btn-icon" onclick="copyLessonPlan()" id="btn-copy-plan" title="Copy text">📋 Copy</button>
+          <button class="btn-icon" onclick="window.print()" title="Print plan">🖨️ Print</button>
+          <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+        </div>
+      </div>
+
+      <!-- Plan Metadata Pills -->
+      <div id="lp2-meta-row" style="display:flex; gap:6px; margin-bottom:6px; flex-wrap:wrap; font-size:11px;">
+        <!-- JS populated pills -->
+      </div>
+
+      <!-- Main Plan Container (fits compact in viewport) -->
+      <div class="card" style="padding:10px 12px; flex:1; display:flex; flex-direction:column; justify-content:space-between; margin-bottom:6px; overflow:hidden;">
+        
+        <!-- Plan Sections List -->
+        <div id="lp2-sections-list" style="overflow-y:auto; flex:1; margin-bottom:6px; padding-right:2px;">
+          <!-- JS rows -->
+        </div>
+
+        <!-- Add Section Form -->
+        <div style="background:var(--surface); border:1px dashed var(--border); border-radius:8px; padding:6px 8px; margin-bottom:6px;">
+          <div style="font-size:11px; font-weight:600; color:var(--muted); margin-bottom:4px; display:flex; justify-content:space-between;">
+            <span>Add Custom Phase</span>
+            <span id="lp2-running-total-label" style="color:var(--gold);">Total: 45m / 45m</span>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <input type="text" id="add-sec-name" placeholder="Phase name (e.g. Exit Quiz)" style="padding:5px 8px; font-size:12px; height:28px; flex:1;" />
+            <input type="number" id="add-sec-mins" placeholder="Mins" min="1" max="60" style="padding:5px 8px; font-size:12px; height:28px; width:58px;" />
+            <button onclick="handleAddSectionToPlan()" class="btn-ghost" style="padding:4px 10px; font-size:12px; font-weight:600; border-color:var(--gold); color:var(--gold);">+ Add</button>
+          </div>
+        </div>
+
+        <!-- Bottom Total Row -->
+        <div style="border-top:1px solid var(--border); padding-top:6px; display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:13px;">
+          <span style="color:var(--muted); font-size:12px;">PLAN INTEGRITY STATUS</span>
+          <span id="lp2-total-badge" style="color:var(--success); background:var(--s-bg); padding:3px 8px; border-radius:6px;">45m ✓ Exact</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SCREEN 2S — COURSE SELECTION (STUDENT)
+       ========================================================= -->
+  <div id="screen-2s" class="screen">
+    <div class="page">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="btn-icon" onclick="showScreen('screen-1s')" aria-label="Back">← Back</button>
+          <span class="topbar-title">Pick Your Goal</span>
+        </div>
+        <div class="topbar-right">
+          <span class="step-pill">Step 2/5</span>
+          <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+        </div>
+      </div>
+
+      <div class="progress-track"><div class="progress-fill" style="width:40%;"></div></div>
+
+      <!-- Category Tab Bar (horizontal scroll) -->
+      <div id="course-category-tabs" style="display:flex; gap:8px; overflow-x:auto; padding-bottom:8px; margin-bottom:14px; scrollbar-width:none;">
+        <button class="chip active" onclick="filterCourseCategory('academics', this)">📐 Academics</button>
+        <button class="chip" onclick="filterCourseCategory('tech', this)">💻 Tech Skills</button>
+        <button class="chip" onclick="filterCourseCategory('data', this)">📊 Data & AI</button>
+        <button class="chip" onclick="filterCourseCategory('commerce', this)">🏦 Commerce</button>
+        <button class="chip" onclick="filterCourseCategory('science', this)">🔬 Science</button>
+      </div>
+
+      <!-- Course Cards (2-column grid) -->
+      <div id="course-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
+        <!-- JS populated course cards -->
+      </div>
+
+      <button id="btn-select-course-next" onclick="handleCourseSelected()" class="btn-gold" disabled>
+        Start Learning This →
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SCREEN 3S — PROFICIENCY CHECK
+       ========================================================= -->
+  <div id="screen-3s" class="screen">
+    <div class="page">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="btn-icon" onclick="showScreen('screen-2s')" aria-label="Back">← Back</button>
+          <span class="topbar-title">How much do you know?</span>
+        </div>
+        <div class="topbar-right">
+          <span class="step-pill">Step 3/5</span>
+          <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+        </div>
+      </div>
+
+      <div class="progress-track"><div class="progress-fill" style="width:60%;"></div></div>
+
+      <!-- Selected Course Gold Pill -->
+      <div style="margin-bottom:12px;">
+        <span id="prof-course-pill" style="background:rgba(232,180,80,0.15); border:1px solid var(--gold); color:var(--gold); font-size:12px; font-weight:700; padding:4px 12px; border-radius:20px;">
+          📐 Mathematics (Class 9-10)
+        </span>
+      </div>
+
+      <h2 style="font-size:20px; font-weight:800; margin:0 0 4px 0;">Be honest — this saves your time</h2>
+      <div style="color:var(--muted); font-size:13px; margin-bottom:18px;">No judgment. Just pick the closest one.</div>
+
+      <!-- 4 Selection Cards -->
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+        
+        <div class="card prof-card" onclick="selectProficiency('easy', this)" style="cursor:pointer; border:1.5px solid var(--border); padding:14px 16px;">
+          <div style="font-weight:700; font-size:15px; margin-bottom:2px;">🆕 Brand New to This</div>
+          <div style="font-size:12px; color:var(--muted);">Never studied this topic before</div>
+        </div>
+
+        <div class="card prof-card" onclick="selectProficiency('medium', this)" style="cursor:pointer; border:1.5px solid var(--border); padding:14px 16px;">
+          <div style="font-weight:700; font-size:15px; margin-bottom:2px;">📚 Heard About It</div>
+          <div style="font-size:12px; color:var(--muted);">I know the basics but need structure</div>
+        </div>
+
+        <div class="card prof-card" onclick="selectProficiency('mixed', this)" style="cursor:pointer; border:1.5px solid var(--border); padding:14px 16px;">
+          <div style="font-weight:700; font-size:15px; margin-bottom:2px;">⚡ Decent Foundation</div>
+          <div style="font-size:12px; color:var(--muted);">I can solve easy problems, struggle with hard ones</div>
+        </div>
+
+        <div class="card prof-card" onclick="selectProficiency('hard', this)" style="cursor:pointer; border:1.5px solid var(--border); padding:14px 16px;">
+          <div style="font-weight:700; font-size:15px; margin-bottom:2px;">🎯 Already Strong</div>
+          <div style="font-size:12px; color:var(--muted);">I know most of it — find my exact gaps</div>
+        </div>
+
+      </div>
+
+      <!-- Subtext Description Banner -->
+      <div id="prof-desc-card" style="display:none; background:var(--surface); border-radius:10px; padding:10px 14px; font-size:12px; color:var(--text); margin-bottom:16px;"></div>
+
+      <button id="btn-start-diag" onclick="startAdaptiveQuiz()" class="btn-gold" disabled>
+        Start My Diagnostic →
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SCREEN 4S — ADAPTIVE QUIZ
+       ========================================================= -->
+  <div id="screen-4s" class="screen">
+    <div class="page">
+      <div class="topbar">
+        <div class="topbar-left">
+          <span class="topbar-title">Diagnostic Quiz</span>
+        </div>
+        <div class="topbar-right">
+          <span class="step-pill">Step 4/5</span>
+          <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+        </div>
+      </div>
+
+      <!-- Progress bar (moves from 60% to 80% across questions) -->
+      <div class="progress-track"><div id="quiz-progress-fill" class="progress-fill" style="width:60%;"></div></div>
+
+      <!-- Top Row: Q X/N, Timer Pill, Difficulty Pill -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span id="quiz-counter" style="font-size:14px; font-weight:700;">Q 1 / 10</span>
+        
+        <div id="quiz-timer-pill" style="background:rgba(232,180,80,0.15); border:1px solid var(--gold); color:var(--gold); font-size:13px; font-weight:700; padding:4px 12px; border-radius:20px; display:inline-flex; align-items:center; gap:4px;">
+          <span>⏱</span> <span id="quiz-timer-text">01:00</span>
+        </div>
+
+        <span id="quiz-diff-pill" style="font-size:12px; font-weight:600; padding:4px 10px; border-radius:14px; background:var(--s-bg); color:var(--success);">
+          Easy
+        </span>
+      </div>
+
+      <!-- Topic tag pill -->
+      <div style="margin-bottom:14px;">
+        <span id="quiz-topic-tag" style="background:var(--surface); border:1px solid var(--border); font-size:12px; color:var(--muted); padding:3px 10px; border-radius:12px;">
+          Polynomials & Algebra
+        </span>
+      </div>
+
+      <!-- Question Card (gold left border 3px) -->
+      <div class="card" style="border-left:3px solid var(--gold); padding:20px; margin-bottom:16px;">
+        <div id="quiz-question-text" style="font-size:16px; font-weight:600; color:var(--text); margin-bottom:18px; line-height:1.45;">
+          <!-- JS injected -->
+        </div>
+
+        <!-- 4 Option Buttons -->
+        <div id="quiz-options-container">
+          <!-- JS injected -->
+        </div>
+
+        <!-- Explanation Line -->
+        <div id="quiz-explanation-box" style="display:none; color:var(--gold); font-size:13px; margin-top:12px; background:rgba(232,180,80,0.08); padding:10px 12px; border-radius:8px;">
+          <!-- JS injected -->
+        </div>
+      </div>
+
+      <!-- Bottom controls: Skip button and Next button -->
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+        <button id="btn-quiz-skip" onclick="handleQuizSkip()" style="border:1.5px dashed var(--violet); color:var(--violet); background:transparent; border-radius:10px; padding:11px 18px; cursor:pointer; font-size:13px; font-weight:600;">
+          🤷 Not sure? Skip
+        </button>
+
+        <button id="btn-quiz-next" onclick="handleQuizNext()" class="btn-gold" style="display:none; width:auto; padding:11px 24px; font-size:14px;">
+          Next →
+        </button>
+      </div>
+
+      <!-- Skip Toast Notification -->
+      <div id="quiz-skip-alert" style="display:none; margin-top:12px; background:rgba(124,111,232,0.15); border:1px solid var(--violet); color:var(--text); padding:8px 12px; border-radius:8px; font-size:12px;">
+        ℹ️ Skipped: Correct answer highlighted and saved to Error Book.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SCREEN 5S — GAP REPORT
+       ========================================================= -->
+  <div id="screen-5s" class="screen">
+    <div class="page">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="btn-icon" onclick="showScreen('screen-4s')" aria-label="Back">← Back</button>
+          <span class="topbar-title">My Report</span>
+        </div>
+        <div class="topbar-right">
+          <span class="step-pill">Step 5/5</span>
+          <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+        </div>
+      </div>
+
+      <div class="progress-track"><div class="progress-fill" style="width:100%;"></div></div>
+
+      <!-- Score Ring (CSS Conic-Gradient) -->
+      <div class="ring-wrapper">
+        <div class="ring" id="report-score-ring">
+          <div class="ring-inner">
+            <span class="ring-score" id="report-score-num">80%</span>
+            <span class="ring-label">Score</span>
+          </div>
+        </div>
+        <div id="report-stats-row" style="font-size:13px; color:var(--muted); margin-top:10px; text-align:center;">
+          8 correct · 1 wrong · 1 skipped
+        </div>
+      </div>
+
+      <!-- Answer Evidence Section (Only answered Qs) -->
+      <div class="card" style="border-left:3px solid var(--gold); margin-bottom:16px; padding:16px;">
+        <div style="font-weight:700; font-size:14px; margin-bottom:10px;">📋 Answer Evidence</div>
+        <div id="report-evidence-list" style="display:flex; flex-direction:column; gap:8px;">
+          <!-- JS injected -->
+        </div>
+      </div>
+
+      <!-- 4 Category Boxes -->
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
+        <div class="card" style="background:var(--s-bg); border-color:var(--success); padding:14px;">
+          <div style="font-weight:700; font-size:14px; color:var(--success); margin-bottom:6px;">✅ Strong Topics</div>
+          <div id="cat-strong-list" style="font-size:13px;">None</div>
+        </div>
+
+        <div class="card" style="background:var(--w-bg); border-color:var(--warning); padding:14px;">
+          <div style="font-weight:700; font-size:14px; color:var(--warning); margin-bottom:6px;">⚠️ Almost There</div>
+          <div id="cat-moderate-list" style="font-size:13px;">None</div>
+        </div>
+
+        <div class="card" style="background:var(--d-bg); border-color:var(--danger); padding:14px;">
+          <div style="font-weight:700; font-size:14px; color:var(--danger); margin-bottom:6px;">❌ Needs Work</div>
+          <div id="cat-weak-list" style="font-size:13px;">None</div>
+        </div>
+
+        <div class="card" style="background:var(--surface); border-color:var(--border); padding:14px;">
+          <div style="font-weight:700; font-size:14px; color:var(--muted); margin-bottom:6px;">❓ Not Assessed</div>
+          <div id="cat-notassessed-list" style="font-size:13px;">None</div>
+        </div>
+      </div>
+
+      <!-- Topic Mastery Bars -->
+      <div class="card" style="margin-bottom:16px;">
+        <div style="font-weight:700; font-size:14px; margin-bottom:12px;">📊 Topic Mastery Breakdown</div>
+        <div id="report-topic-bars" style="display:flex; flex-direction:column; gap:10px;">
+          <!-- JS animated bars -->
+        </div>
+      </div>
+
+      <!-- Learning Roadmap Card -->
+      <div class="card" style="border-left:3px solid var(--gold); margin-bottom:20px;">
+        <div style="font-weight:700; font-size:15px; margin-bottom:8px;">📍 Your Learning Roadmap</div>
+        <div id="report-roadmap-steps" style="display:flex; flex-direction:column; gap:8px; font-size:13px;">
+          <!-- JS steps -->
+        </div>
+      </div>
+
+      <button onclick="showScreen('screen-6s')" class="btn-gold">See Your Daily Plan →</button>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SCREEN 6S — DAILY STUDY PLAN HUB
+       ========================================================= -->
+  <div id="screen-6s" class="screen">
+    <div class="page" style="padding-bottom:80px;">
+      <div class="topbar">
+        <div class="topbar-left">
+          <span style="font-weight:800; font-size:18px; color:var(--gold);">EduBridge AI</span>
+        </div>
+        <div class="topbar-right">
+          <button class="btn-icon" onclick="openErrorBookModal()">
+            📖 Error Book <span class="badge-errorbook" id="eb-badge-hub">0</span>
+          </button>
+          <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme">🌙</button>
+        </div>
+      </div>
+
+      <!-- Greeting Card with Gold Glow -->
+      <div class="card" style="box-shadow: 0 0 24px rgba(232,180,80,0.2); border-color:var(--gold); margin-bottom:16px; position:relative; overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <h2 id="hub-greeting-name" style="font-size:20px; font-weight:800; margin:0 0 4px 0;">Hello, Student 👋</h2>
+            <div id="hub-course-title" style="font-size:13px; color:var(--muted); font-weight:600;">Mathematics (Class 9-10)</div>
+          </div>
+          <div style="background:rgba(232,180,80,0.15); border:1px solid var(--gold); color:var(--gold); font-size:12px; font-weight:700; padding:4px 10px; border-radius:20px; display:inline-flex; align-items:center; gap:4px;">
+            🔥 3 day streak
+          </div>
+        </div>
+      </div>
+
+      <!-- TODAY Section -->
+      <div style="margin-bottom:16px;">
+        <div style="border-left:3px solid var(--gold); padding-left:8px; font-weight:800; font-size:15px; margin-bottom:10px;">Today</div>
+        
+        <!-- Card A: Today's Topic -->
+        <div class="card" style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:11px; color:var(--gold); font-weight:700; text-transform:uppercase;">📖 Today's Topic</div>
+            <div style="font-size:15px; font-weight:700; margin:3px 0 2px 0;">Factorization of Polynomials</div>
+            <div style="font-size:12px; color:var(--muted);">⏱ ~25 min session</div>
+          </div>
+          <button class="btn-outline" onclick="openStudyTopicNotice()">Start Reading →</button>
+        </div>
+
+        <!-- Card B: Practice Set -->
+        <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:11px; color:var(--violet); font-weight:700; text-transform:uppercase;">🧩 Practice Set</div>
+            <div style="font-size:15px; font-weight:700; margin:3px 0 2px 0;">5 Targeted Questions</div>
+            <div style="font-size:12px; color:var(--muted);">Medium–Hard Adaptive</div>
+          </div>
+          <button class="btn-gold" style="width:auto; padding:8px 14px; font-size:13px;" onclick="startAdaptiveQuiz()">Start Practice →</button>
+        </div>
+      </div>
+
+      <!-- THIS WEEK (7-day row) -->
+      <div class="card" style="margin-bottom:16px;">
+        <div style="font-weight:700; font-size:14px; margin-bottom:10px;">📅 This Week's Commitment</div>
+        <div style="display:flex; justify-content:space-between; gap:4px;">
+          <!-- 7 days -->
+          <div onclick="toggleDayDone(0)" style="text-align:center; cursor:pointer; flex:1;">
+            <div id="day-circle-0" style="width:34px; height:34px; border-radius:50%; background:var(--s-bg); border:1.5px solid var(--success); color:var(--success); font-weight:700; display:flex; align-items:center; justify-content:center; margin:0 auto 4px auto; font-size:13px;">✓</div>
+            <div style="font-size:11px; font-weight:600;">Mon</div>
+            <div style="font-size:9px; color:var(--muted);">Algebra</div>
+          </div>
+          <div onclick="toggleDayDone(1)" style="text-align:center; cursor:pointer; flex:1;">
+            <div id="day-circle-1" style="width:34px; height:34px; border-radius:50%; background:var(--s-bg); border:1.5px solid var(--success); color:var(--success); font-weight:700; display:flex; align-items:center; justify-content:center; margin:0 auto 4px auto; font-size:13px;">✓</div>
+            <div style="font-size:11px; font-weight:600;">Tue</div>
+            <div style="font-size:9px; color:var(--muted);">Zeros</div>
+          </div>
+          <div onclick="toggleDayDone(2)" style="text-align:center; cursor:pointer; flex:1;">
+            <div id="day-circle-2" style="width:34px; height:34px; border-radius:50%; background:var(--s-bg); border:1.5px solid var(--success); color:var(--success); font-weight:700; display:flex; align-items:center; justify-content:center; margin:0 auto 4px auto; font-size:13px;">✓</div>
+            <div style="font-size:11px; font-weight:600;">Wed</div>
+            <div style="font-size:9px; color:var(--muted);">Factors</div>
+          </div>
+          <div onclick="toggleDayDone(3)" style="text-align:center; cursor:pointer; flex:1;">
+            <div id="day-circle-3" style="width:34px; height:34px; border-radius:50%; background:var(--surface); border:1.5px solid var(--border); color:var(--muted); font-weight:700; display:flex; align-items:center; justify-content:center; margin:0 auto 4px auto; font-size:13px;">□</div>
+            <div style="font-size:11px; font-weight:600;">Thu</div>
+            <div style="font-size:9px; color:var(--muted);">Cubic</div>
+          </div>
+          <div onclick="toggleDayDone(4)" style="text-align:center; cursor:pointer; flex:1;">
+            <div id="day-circle-4" style="width:34px; height:34px; border-radius:50%; background:var(--surface); border:1.5px solid var(--border); color:var(--muted); font-weight:700; display:flex; align-items:center; justify-content:center; margin:0 auto 4px auto; font-size:13px;">□</div>
+            <div style="font-size:11px; font-weight:600;">Fri</div>
+            <div style="font-size:9px; color:var(--muted);">Mock</div>
+          </div>
+          <div onclick="toggleDayDone(5)" style="text-align:center; cursor:pointer; flex:1;">
+            <div id="day-circle-5" style="width:34px; height:34px; border-radius:50%; background:var(--surface); border:1.5px solid var(--border); color:var(--muted); font-weight:700; display:flex; align-items:center; justify-content:center; margin:0 auto 4px auto; font-size:13px;">□</div>
+            <div style="font-size:11px; font-weight:600;">Sat</div>
+            <div style="font-size:9px; color:var(--muted);">Review</div>
+          </div>
+          <div onclick="toggleDayDone(6)" style="text-align:center; cursor:pointer; flex:1;">
+            <div id="day-circle-6" style="width:34px; height:34px; border-radius:50%; background:var(--surface); border:1.5px solid var(--border); color:var(--muted); font-weight:700; display:flex; align-items:center; justify-content:center; margin:0 auto 4px auto; font-size:13px;">□</div>
+            <div style="font-size:11px; font-weight:600;">Sun</div>
+            <div style="font-size:9px; color:var(--muted);">Rest</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MONTHLY GOAL (violet border card) -->
+      <div class="card" style="border:1.5px solid var(--violet); margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-weight:700; font-size:14px;">🎯 Score 80%+ on Polynomials</span>
+          <span style="font-size:12px; color:var(--violet); font-weight:700;">68%</span>
+        </div>
+        <div class="progress-track" style="margin:0 0 6px 0;">
+          <div class="progress-fill" style="width:68%; background:var(--violet);"></div>
+        </div>
+        <div style="font-size:11px; color:var(--muted);">4 more sessions to reach monthly mastery goal</div>
+      </div>
+
+      <!-- ERROR BOOK CARD (amber / warning border) -->
+      <div class="card" style="border:1.5px solid var(--warning); margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-weight:700; font-size:14px;">📖 Your Error Book</span>
+          <button class="btn-icon" onclick="openErrorBookModal()" style="font-size:11px;">View All</button>
+        </div>
+        <div id="hub-errorbook-preview">
+          <!-- JS injected -->
+        </div>
+      </div>
+
+      <!-- WEEKLY MOCK CARD (gold glow border) -->
+      <div class="card" style="border:1.5px solid var(--gold); box-shadow:0 0 16px rgba(232,180,80,0.15); margin-bottom:24px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-weight:700; font-size:14px; margin-bottom:2px;">📊 Weekly Mock Test</div>
+          <div style="font-size:12px; color:var(--muted);">Every Friday · 15 Questions · 20 min</div>
+        </div>
+        <button id="btn-mock-remind" onclick="handleMockReminder()" class="btn-outline" style="font-size:12px; padding:8px 14px;">
+          Remind Me
+        </button>
+      </div>
+
+      <!-- FIXED BOTTOM NAV (4 tabs) -->
+      <div class="bottom-nav">
+        <button class="nav-tab-btn active" onclick="handleNavTab('home')">
+          <span>🏠</span>
+          <span>Home</span>
+        </button>
+        <button class="nav-tab-btn" onclick="handleNavTab('study')">
+          <span>📖</span>
+          <span>Study</span>
+        </button>
+        <button class="nav-tab-btn" onclick="handleNavTab('reports')">
+          <span>📊</span>
+          <span>Reports</span>
+        </button>
+        <button class="nav-tab-btn" onclick="handleNavTab('profile')">
+          <span>👤</span>
+          <span>Profile</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================
+       ERROR BOOK MODAL (OVERLAY / DRAWER)
+       ========================================================= -->
+  <div id="modal-errorbook" class="modal-overlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal-drawer">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="font-size:18px; font-weight:800; margin:0;">📖 Error Book</h3>
+        <button onclick="closeErrorBookModal()" class="btn-icon" style="font-size:16px; padding:4px 8px;" aria-label="Close modal">✕</button>
+      </div>
+
+      <!-- Entry List (Scrollable) -->
+      <div id="eb-entry-list" style="max-height:40vh; overflow-y:auto; margin-bottom:18px; display:flex; flex-direction:column; gap:8px;">
+        <!-- Injected via JS -->
+      </div>
+
+      <!-- Add Entry Form (Compact) -->
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px;">
+        <div style="font-weight:700; font-size:13px; margin-bottom:8px;">Add Topic to Error Book</div>
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+          <select id="eb-add-subject" style="padding:7px 10px; font-size:12px;">
+            <option value="Mathematics">Mathematics</option>
+            <option value="Physics">Physics</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Biology">Biology</option>
+            <option value="History">History</option>
+            <option value="Other">Other</option>
+          </select>
+          <select id="eb-add-grade" style="padding:7px 10px; font-size:12px;">
+            <option value="Grade 8">Grade 8</option>
+            <option value="Grade 9" selected>Grade 9</option>
+            <option value="Grade 10">Grade 10</option>
+            <option value="11th / 12th">11th / 12th</option>
+          </select>
+        </div>
+
+        <input type="text" id="eb-add-topic" placeholder="Topic name (e.g. Quadratic Formula)" style="padding:8px 10px; font-size:12px; margin-bottom:8px;" />
+        
+        <textarea id="eb-add-note" placeholder="Note / reason why it was missed (optional)" rows="2" style="padding:8px 10px; font-size:12px; margin-bottom:10px;"></textarea>
+
+        <button onclick="handleManualAddErrorBook()" class="btn-gold" style="padding:9px 14px; font-size:13px;">
+          + Add to Error Book
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================
+       ALL JAVASCRIPT LOGIC (PURE VANILLA JS)
+       ========================================================= -->
+  <script type="module">
+    // =========================================================
+    // 1. GLOBAL STATE & PERSISTENCE
+    // =========================================================
+    const APP = {
+      role: null,            // 'teacher' | 'student'
+      theme: localStorage.getItem('edubridge_theme') || 'dark',
+
+      student: {
+        name: '', grade: '', board: '', prevScore: '', scoreType: 'percent',
+        phone: '', email: '', course: 'Mathematics (Class 9-10)', proficiency: 'medium'
+      },
+      teacher: {
+        name: '', experience: '', institutionType: '',
+        institution: '', subjects: [], phone: '', email: ''
+      },
+      lesson: {
+        subject: 'Biology', grade: 'Grade 9', topic: 'Mitosis and Stages of Cell Division',
+        minutes: 45, pedagogy: '5e', savedPlan: null, warmUpTopic: null
+      },
+      quiz: {
+        questions: [], shownIds: JSON.parse(localStorage.getItem('edubridge_shownids') || '[]'),
+        currentIndex: 0, answers: [], correct: 0, wrong: 0, skipped: 0,
+        currentDifficulty: 'medium', timerSec: 60, timerInterval: null
+      },
+      errorBook: JSON.parse(localStorage.getItem('edubridge_errorbook') || '[]'),
+      report: { score: 0, categories: { strong: [], moderate: [], weak: [], notAssessed: [] }, evidence: [] }
+    };
+    window.APP = APP;
+
+    // Apply saved theme immediately
+    if (APP.theme === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+
+    // =========================================================
+    // 2. PEDAGOGY DEFINITIONS & EXACT MINUTE DISTRIBUTION LOGIC
+    // =========================================================
+    const PEDAGOGY_CONFIGS = {
+      '5e': {
+        label: '5E Constructivist',
+        sections: [
+          { name: 'Engage', icon: '🎯', desc: 'Hook activity, prior knowledge recall', weight: 0.11 },
+          { name: 'Explore', icon: '🔍', desc: 'Students investigate / hands-on activity', weight: 0.22 },
+          { name: 'Explain', icon: '📖', desc: 'Teacher explains concept clearly', weight: 0.27 },
+          { name: 'Elaborate', icon: '🧪', desc: 'Apply to new situation or example', weight: 0.22 },
+          { name: 'Evaluate', icon: '✅', desc: 'Exit ticket or quick MCQ check', weight: 0.18 }
+        ]
+      },
+      'direct': {
+        label: 'Direct Instruction',
+        sections: [
+          { name: 'Intro', icon: '🎯', desc: 'Set lesson objective and context', weight: 0.11 },
+          { name: 'I-Do', icon: '👨‍🏫', desc: 'Teacher demonstration and modeling', weight: 0.22 },
+          { name: 'We-Do', icon: '🤝', desc: 'Guided collaborative practice', weight: 0.27 },
+          { name: 'You-Do', icon: '✍️', desc: 'Independent student practice', weight: 0.27 },
+          { name: 'Closure', icon: '🏁', desc: 'Wrap-up and synthesis', weight: 0.13 }
+        ]
+      },
+      'pbl': {
+        label: 'Problem-Based Learning',
+        sections: [
+          { name: 'Hook', icon: '🪝', desc: 'Real-world challenge introduction', weight: 0.10 },
+          { name: 'Explore', icon: '🔍', desc: 'Information gathering and research', weight: 0.30 },
+          { name: 'Solve', icon: '💡', desc: 'Team problem-solving and prototyping', weight: 0.30 },
+          { name: 'Discuss', icon: '🗣️', desc: 'Share solutions and cross-critique', weight: 0.20 },
+          { name: 'Reflect', icon: '🪞', desc: 'Metacognitive summary and takeaways', weight: 0.10 }
+        ]
+      },
+      'flipped': {
+        label: 'Flipped Classroom',
+        sections: [
+          { name: 'Review', icon: '⏮️', desc: 'Pre-class material quick check', weight: 0.20 },
+          { name: 'Apply', icon: '⚙️', desc: 'Hands-on group work & problem sets', weight: 0.30 },
+          { name: 'Discuss', icon: '💬', desc: 'Deep-dive questions & peer debates', weight: 0.30 },
+          { name: 'Assess', icon: '📝', desc: 'Formative mastery verification', weight: 0.20 }
+        ]
+      },
+      'socratic': {
+        label: 'Socratic Method',
+        sections: [
+          { name: 'Question', icon: '❓', desc: 'Opening fundamental inquiry', weight: 0.15 },
+          { name: 'Hypothesis', icon: '💭', desc: 'Student formulations & claims', weight: 0.20 },
+          { name: 'Discussion', icon: '🏛️', desc: 'Rigorous cross-examination', weight: 0.40 },
+          { name: 'Conclusion', icon: '⚖️', desc: 'Synthesis of verified insights', weight: 0.15 },
+          { name: 'Wrap', icon: '🎁', desc: 'Takeaway reflection & assignment', weight: 0.10 }
+        ]
+      }
+    };
+
+    function calculatePlanSections(totalMinutes, pedagogyKey, warmUpTopic) {
+      const config = PEDAGOGY_CONFIGS[pedagogyKey] || PEDAGOGY_CONFIGS['5e'];
+      const sections = [];
+      let availableMinutes = totalMinutes;
+
+      if (warmUpTopic && totalMinutes >= 10) {
+        sections.push({
+          name: `Warm-up: ${warmUpTopic}`,
+          icon: '🔥',
+          desc: 'Address prior missed topic from Error Book',
+          minutes: 3
+        });
+        availableMinutes -= 3;
+      }
+
+      const defs = config.sections;
+      let allocated = 0;
+      const tempMins = [];
+
+      for (let i = 0; i < defs.length; i++) {
+        let m = Math.floor(availableMinutes * defs[i].weight);
+        if (m < 1) m = 1;
+        tempMins.push(m);
+        allocated += m;
+      }
+
+      // Remainder = total - sum(floored) -> add to last section
+      let remainder = availableMinutes - allocated;
+      tempMins[tempMins.length - 1] += remainder;
+
+      for (let i = 0; i < defs.length; i++) {
+        sections.push({
+          name: defs[i].name,
+          icon: defs[i].icon,
+          desc: defs[i].desc,
+          minutes: tempMins[i]
+        });
+      }
+
+      return sections;
+    }
+
+    // =========================================================
+    // 3. PRESETS DATA FOR LESSON PLAN
+    // =========================================================
+    const PRESETS = {
+      'Mitosis':             { subject: 'Biology', grade: 'Grade 9', topic: 'Mitosis and Stages of Cell Division' },
+      'Quadratic Equations': { subject: 'Mathematics', grade: 'Grade 10', topic: 'Solving Quadratic Equations' },
+      'Newton\'s Laws':      { subject: 'Physics', grade: 'Grade 9', topic: 'Newton\'s Laws of Motion' },
+      'Periodic Table':      { subject: 'Chemistry', grade: 'Grade 9', topic: 'Periodic Table Trends' },
+      'Photosynthesis':      { subject: 'Biology', grade: 'Grade 7', topic: 'Photosynthesis Process' },
+      'World War II':        { subject: 'History', grade: 'Grade 9', topic: 'Causes and Events of World War II' },
+      'Ohm\'s Law':          { subject: 'Physics', grade: 'Grade 10', topic: 'Ohm\'s Law and Resistance' },
+      'French Revolution':   { subject: 'History', grade: 'Grade 9', topic: 'Storming of Bastille & Rights of Man' },
+      'Linear Equations':    { subject: 'Mathematics', grade: 'Grade 8', topic: 'Linear Equations in Two Variables' },
+      'Cell Division':       { subject: 'Biology', grade: 'Grade 9', topic: 'Meiosis and Gametogenesis' },
+      'Indian Constitution': { subject: 'Political Science', grade: 'Grade 9', topic: 'Features of Indian Constitution' },
+      'Trigonometry':        { subject: 'Mathematics', grade: 'Grade 10', topic: 'Introduction to Trigonometry' },
+      'Chemical Bonding':    { subject: 'Chemistry', grade: 'Grade 10', topic: 'Ionic and Covalent Bonds' },
+      'Democracy':           { subject: 'Political Science', grade: 'Grade 9', topic: 'Electoral Politics & Rights' },
+      'Shakespeare':         { subject: 'English', grade: 'Grade 10', topic: 'Merchant of Venice Themes' },
+      'Statistics':          { subject: 'Mathematics', grade: 'Grade 10', topic: 'Mean, Median, Mode' }
+    };
+
+    // =========================================================
+    // 4. QUESTION POOL & RANDOMIZATION LOGIC (VERBATIM)
+    // =========================================================
+    const QUESTION_POOL = [
+      {id:'P01', q:'A polynomial with only one term is called?',
+       opts:[{t:'Monomial',c:true},{t:'Binomial',c:false},{t:'Trinomial',c:false},{t:'Constant',c:false}],
+       exp:'A single-term polynomial like 5x² is a monomial.', diff:'easy', topic:'Polynomial Types'},
+      {id:'P02', q:'Degree of the constant polynomial 7 is?',
+       opts:[{t:'0',c:true},{t:'1',c:false},{t:'7',c:false},{t:'Undefined',c:false}],
+       exp:'Non-zero constants have degree 0.', diff:'easy', topic:'Polynomial Degrees'},
+      {id:'P03', q:'Which is NOT a polynomial?',
+       opts:[{t:'√x + 1',c:true},{t:'x² + 2x',c:false},{t:'3x - 1',c:false},{t:'x³',c:false}],
+       exp:'√x = x^(1/2) — fractional exponent makes it non-polynomial.', diff:'easy', topic:'Polynomial Definitions'},
+      {id:'P04', q:'Zeros of x² - 7x + 12 are?',
+       opts:[{t:'3, 4',c:true},{t:'2, 6',c:false},{t:'-3, -4',c:false},{t:'1, 12',c:false}],
+       exp:'(x-3)(x-4) = 0 → x = 3 or x = 4', diff:'medium', topic:'Zeros of Polynomials'},
+      {id:'P05', q:'Sum of zeros of 2x² - 8x + 6 is?',
+       opts:[{t:'4',c:true},{t:'3',c:false},{t:'6',c:false},{t:'-4',c:false}],
+       exp:'Sum = -b/a = 8/2 = 4', diff:'medium', topic:'Relationship between Zeros'},
+      {id:'P06', q:'Product of zeros of 3x² + 6x - 9 is?',
+       opts:[{t:'-3',c:true},{t:'2',c:false},{t:'6',c:false},{t:'-9',c:false}],
+       exp:'Product = c/a = -9/3 = -3', diff:'medium', topic:'Relationship between Zeros'},
+      {id:'P07', q:'p(1) for p(x) = x³ - 6x² + 11x - 6 equals?',
+       opts:[{t:'0',c:true},{t:'6',c:false},{t:'-6',c:false},{t:'1',c:false}],
+       exp:'1 - 6 + 11 - 6 = 0 → (x-1) is a factor', diff:'medium', topic:'Factor Theorem'},
+      {id:'P08', q:'Remainder when x³+3x²-x-3 is divided by (x+1)?',
+       opts:[{t:'0',c:true},{t:'4',c:false},{t:'-4',c:false},{t:'3',c:false}],
+       exp:'p(-1) = -1+3+1-3 = 0', diff:'medium', topic:'Remainder Theorem'},
+      {id:'P09', q:'Factorize: x² - 25',
+       opts:[{t:'(x+5)(x-5)',c:true},{t:'(x-5)²',c:false},{t:'(x+5)²',c:false},{t:'(x-25)(x+1)',c:false}],
+       exp:'Difference of squares: a²-b² = (a+b)(a-b)', diff:'easy', topic:'Algebraic Identities'},
+      {id:'P10', q:'If (x-2) is a factor of x² - 5x + k, then k =?',
+       opts:[{t:'6',c:true},{t:'-6',c:false},{t:'10',c:false},{t:'-10',c:false}],
+       exp:'p(2)=0 → 4-10+k=0 → k=6', diff:'hard', topic:'Factor Theorem'},
+      {id:'P11', q:'Factorize: 2x² + x - 6',
+       opts:[{t:'(2x-3)(x+2)',c:true},{t:'(2x+3)(x-2)',c:false},{t:'(x+3)(2x-2)',c:false},{t:'(2x-1)(x+6)',c:false}],
+       exp:'2x²+4x-3x-6 = 2x(x+2)-3(x+2) = (2x-3)(x+2)', diff:'hard', topic:'Quadratic Factorization'},
+      {id:'P12', q:'A polynomial of degree 3 is called?',
+       opts:[{t:'Cubic',c:true},{t:'Linear',c:false},{t:'Quadratic',c:false},{t:'Biquadratic',c:false}],
+       exp:'Degree 1=Linear, 2=Quadratic, 3=Cubic', diff:'easy', topic:'Polynomial Degrees'},
+      {id:'P13', q:'Maximum zeros a cubic polynomial can have?',
+       opts:[{t:'3',c:true},{t:'1',c:false},{t:'2',c:false},{t:'4',c:false}],
+       exp:'A degree-n polynomial has at most n real zeros.', diff:'easy', topic:'Fundamental Theorem'},
+      {id:'P14', q:'Value of (99)² using identity?',
+       opts:[{t:'9801',c:true},{t:'9901',c:false},{t:'9802',c:false},{t:'9902',c:false}],
+       exp:'(100-1)² = 10000 - 200 + 1 = 9801', diff:'medium', topic:'Algebraic Identities'},
+      {id:'P15', q:'Factorize: x³ - 8',
+       opts:[{t:'(x-2)(x²+2x+4)',c:true},{t:'(x+2)(x²-2x+4)',c:false},{t:'(x-2)³',c:false},{t:'(x-4)(x+2)',c:false}],
+       exp:'a³-b³ = (a-b)(a²+ab+b²) with a=x, b=2', diff:'hard', topic:'Cubic Identities'},
+      {id:'P16', q:'Which polynomial has NO real zeros?',
+       opts:[{t:'x²+1',c:true},{t:'x²-1',c:false},{t:'x²-4',c:false},{t:'x+2',c:false}],
+       exp:'x²+1 > 0 for all real x — never equals zero.', diff:'hard', topic:'Real Zeros'},
+      {id:'P17', q:'Degree of the zero polynomial is?',
+       opts:[{t:'Not defined',c:true},{t:'0',c:false},{t:'1',c:false},{t:'-1',c:false}],
+       exp:'The zero polynomial has no defined degree.', diff:'medium', topic:'Polynomial Degrees'},
+      {id:'P18', q:'Geometric meaning of zero of p(x) is?',
+       opts:[{t:'x-intercept of the graph',c:true},{t:'y-intercept',c:false},{t:'Slope of graph',c:false},{t:'Vertex of parabola',c:false}],
+       exp:'Where y=p(x) crosses the x-axis are the zeros.', diff:'medium', topic:'Geometric Graphs'},
+      {id:'P19', q:'(a+b)² = a²+2ab+b² — this is called?',
+       opts:[{t:'Square of a sum',c:true},{t:'Difference of squares',c:false},{t:'Cube identity',c:false},{t:'Product rule',c:false}],
+       exp:'(a+b)² expanded is the square of a sum identity.', diff:'easy', topic:'Algebraic Identities'},
+      {id:'P20', q:'If p(x) = 5 for all x, the degree of p(x) is?',
+       opts:[{t:'0',c:true},{t:'5',c:false},{t:'1',c:false},{t:'Undefined',c:false}],
+       exp:'Non-zero constants are degree-0 polynomials.', diff:'easy', topic:'Constant Polynomials'}
+    ];
+
+    function getRandomQuestions(pool, count, shownIds) {
+      function shuffleArr(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+      let unseen = pool.filter(q => !shownIds.includes(q.id));
+      if (unseen.length < count) {
+        unseen = [...pool];
+        shownIds = [];
+      }
+      const picked = shuffleArr(unseen).slice(0, count);
+      return picked.map(q => ({ ...q, opts: shuffleArr(q.opts) }));
+    }
+
+    // =========================================================
+    // 5. NAVIGATION & SCREEN MANAGER
+    // =========================================================
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(id);
+      if (target) {
+        target.classList.add('active');
+        window.scrollTo(0, 0);
+      }
+      updateThemeButtons();
+      updateErrorBookBadges();
+      if (id === 'screen-lp1') {
+        initLP1Presets();
+      }
+      if (id === 'screen-6s') {
+        renderHubGreeting();
+      }
+    }
+    window.showScreen = showScreen;
+
+    // Theme Toggle
+    function toggleTheme() {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        document.documentElement.removeAttribute('data-theme');
+        APP.theme = 'dark';
+        localStorage.setItem('edubridge_theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        APP.theme = 'light';
+        localStorage.setItem('edubridge_theme', 'light');
+      }
+      updateThemeButtons();
+    }
+    window.toggleTheme = toggleTheme;
+
+    function updateThemeButtons() {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+        btn.textContent = isLight ? '☀️' : '🌙';
+      });
+    }
+
+    // =========================================================
+    // 6. ROLE SELECT LOGIC (SCREEN 0)
+    // =========================================================
+    function selectRole(role) {
+      APP.role = role;
+      const teacherCard = document.getElementById('role-card-teacher');
+      const studentCard = document.getElementById('role-card-student');
+      const btn = document.getElementById('btn-continue-role');
+
+      teacherCard.style.border = role === 'teacher' ? '2px solid var(--gold)' : '1.5px solid var(--border)';
+      teacherCard.style.boxShadow = role === 'teacher' ? '0 0 16px rgba(232,180,80,0.2)' : 'none';
+
+      studentCard.style.border = role === 'student' ? '2px solid var(--gold)' : '1.5px solid var(--border)';
+      studentCard.style.boxShadow = role === 'student' ? '0 0 16px rgba(232,180,80,0.2)' : 'none';
+
+      btn.disabled = false;
+    }
+    window.selectRole = selectRole;
+
+    function handleRoleContinue() {
+      if (APP.role === 'teacher') {
+        showScreen('screen-1t');
+      } else if (APP.role === 'student') {
+        showScreen('screen-1s');
+      }
+    }
+    window.handleRoleContinue = handleRoleContinue;
+
+    // =========================================================
+    // 7. STUDENT PROFILE LOGIC (SCREEN 1S)
+    // =========================================================
+    function setScoreType(type) {
+      APP.student.scoreType = type;
+      const pctBtn = document.getElementById('toggle-score-pct');
+      const cgpaBtn = document.getElementById('toggle-score-cgpa');
+      const input = document.getElementById('s-score');
+
+      if (type === 'percent') {
+        pctBtn.style.background = 'var(--gold)';
+        pctBtn.style.color = '#0F0E17';
+        cgpaBtn.style.background = 'transparent';
+        cgpaBtn.style.color = 'var(--text)';
+        input.placeholder = 'e.g. 85';
+        input.max = '100';
+      } else {
+        cgpaBtn.style.background = 'var(--gold)';
+        cgpaBtn.style.color = '#0F0E17';
+        pctBtn.style.background = 'transparent';
+        pctBtn.style.color = 'var(--text)';
+        input.placeholder = 'e.g. 8.8';
+        input.max = '10';
+      }
+    }
+    window.setScoreType = setScoreType;
+
+    function toggleStudentOtherClass(val) {
+      const otherInput = document.getElementById('s-class-other');
+      otherInput.style.display = val === 'Other' ? 'block' : 'none';
+    }
+    window.toggleStudentOtherClass = toggleStudentOtherClass;
+
+    function toggleStudentOtherBoard(val) {
+      const otherInput = document.getElementById('s-board-other');
+      otherInput.style.display = val === 'Other' ? 'block' : 'none';
+    }
+    window.toggleStudentOtherBoard = toggleStudentOtherBoard;
+
+    function handleStudentProfileSubmit() {
+      const errBox = document.getElementById('student-form-err');
+      errBox.style.display = 'none';
+
+      const name = document.getElementById('s-name').value.trim();
+      let sClass = document.getElementById('s-class').value;
+      if (sClass === 'Other') {
+        sClass = document.getElementById('s-class-other').value.trim();
+      }
+      let board = document.getElementById('s-board').value;
+      if (board === 'Other') {
+        board = document.getElementById('s-board-other').value.trim();
+      }
+      const score = document.getElementById('s-score').value.trim();
+      const phone = document.getElementById('s-phone').value.trim();
+      const email = document.getElementById('s-email').value.trim();
+
+      if (!name) {
+        showFormError(errBox, '⚠️ Full Name is required.');
+        return;
+      }
+      if (!sClass) {
+        showFormError(errBox, '⚠️ Please select or type your Class/Year.');
+        return;
+      }
+      if (!board) {
+        showFormError(errBox, '⚠️ Please select or type your Board/University.');
+        return;
+      }
+      if (!score) {
+        showFormError(errBox, '⚠️ Previous Result is required.');
+        return;
+      }
+      if (!phone || phone.length < 10) {
+        showFormError(errBox, '⚠️ Enter a valid 10-digit mobile number.');
+        return;
+      }
+
+      APP.student.name = name;
+      APP.student.grade = sClass;
+      APP.student.board = board;
+      APP.student.prevScore = score;
+      APP.student.phone = phone;
+      APP.student.email = email;
+
+      showScreen('screen-2s');
+    }
+    window.handleStudentProfileSubmit = handleStudentProfileSubmit;
+
+    function showFormError(el, msg) {
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    // =========================================================
+    // 8. TEACHER PROFILE LOGIC (SCREEN 1T)
+    // =========================================================
+    const TEACHER_SUBJECT_OPTIONS = [
+      'Mathematics', 'Physics', 'Chemistry', 'Biology', 'Science (General)',
+      'History', 'Geography', 'English', 'Hindi', 'Marathi',
+      'Computer Science', 'Economics', 'Political Science',
+      'EVS', 'Commerce / Accountancy', 'Art & Design', 'Other'
+    ];
+
+    function initTeacherSubjects() {
+      const grid = document.getElementById('teacher-subjects-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      TEACHER_SUBJECT_OPTIONS.forEach(sub => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'chip';
+        btn.style.fontSize = '11px';
+        btn.style.padding = '5px 8px';
+        btn.style.justifyContent = 'center';
+        btn.textContent = sub;
+        btn.onclick = () => {
+          if (sub === 'Other') {
+            const otherInp = document.getElementById('t-subject-other');
+            const isActive = btn.classList.toggle('active');
+            otherInp.style.display = isActive ? 'block' : 'none';
+            if (!isActive) {
+              APP.teacher.subjects = APP.teacher.subjects.filter(s => s !== 'Other');
+            } else {
+              APP.teacher.subjects.push('Other');
+            }
+          } else {
+            const isActive = btn.classList.toggle('active');
+            if (isActive) {
+              if (!APP.teacher.subjects.includes(sub)) APP.teacher.subjects.push(sub);
+            } else {
+              APP.teacher.subjects = APP.teacher.subjects.filter(s => s !== sub);
+            }
+          }
+        };
+        grid.appendChild(btn);
+      });
+    }
+
+    function toggleTeacherOtherInst(val) {
+      const el = document.getElementById('t-inst-other');
+      el.style.display = val === 'Other' ? 'block' : 'none';
+    }
+    window.toggleTeacherOtherInst = toggleTeacherOtherInst;
+
+    function handleTeacherProfileSubmit() {
+      const errBox = document.getElementById('teacher-form-err');
+      errBox.style.display = 'none';
+
+      const name = document.getElementById('t-name').value.trim();
+      const exp = document.getElementById('t-exp').value;
+      let instType = document.getElementById('t-inst-type').value;
+      if (instType === 'Other') {
+        instType = document.getElementById('t-inst-other').value.trim();
+      }
+      const instName = document.getElementById('t-inst-name').value.trim();
+      const phone = document.getElementById('t-phone').value.trim();
+      const email = document.getElementById('t-email').value.trim();
+
+      if (!name) {
+        showFormError(errBox, '⚠️ Full Name is required.');
+        return;
+      }
+      if (!exp) {
+        showFormError(errBox, '⚠️ Select teaching experience.');
+        return;
+      }
+      if (!instType || !instName) {
+        showFormError(errBox, '⚠️ Institution Type & Name are required.');
+        return;
+      }
+      if (APP.teacher.subjects.length === 0) {
+        showFormError(errBox, '⚠️ Select at least one subject you teach.');
+        return;
+      }
+      if (!phone || phone.length < 10) {
+        showFormError(errBox, '⚠️ Enter a valid 10-digit mobile number.');
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        showFormError(errBox, '⚠️ Enter a valid email address.');
+        return;
+      }
+
+      APP.teacher.name = name;
+      APP.teacher.experience = exp;
+      APP.teacher.institutionType = instType;
+      APP.teacher.institution = instName;
+      APP.teacher.phone = phone;
+      APP.teacher.email = email;
+
+      showScreen('screen-lp1');
+    }
+    window.handleTeacherProfileSubmit = handleTeacherProfileSubmit;
+
+    // =========================================================
+    // 9. LESSON PLAN BUILDER (SCREEN LP1 & LP2)
+    // =========================================================
+    function initLP1Presets() {
+      const container = document.getElementById('preset-chips-scroll');
+      if (!container) return;
+      container.innerHTML = '';
+      Object.keys(PRESETS).forEach(presetKey => {
+        const p = PRESETS[presetKey];
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'chip preset-chip';
+        chip.textContent = presetKey;
+        chip.onclick = () => {
+          document.getElementById('lp-grade').value = p.grade;
+          document.getElementById('lp-subject').value = p.subject;
+          document.getElementById('lp-topic').value = p.topic;
+          syncSubjectChips(p.subject);
+          validateLessonInputs();
+        };
+        container.appendChild(chip);
+      });
+
+      // Quick subject row
+      initLPSubjectChips();
+      checkSavedPlanBanner();
+      checkErrorBookReminder();
+      validateLessonInputs();
+    }
+
+    function initLPSubjectChips() {
+      const subjects = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'Science', 'History', 'Geography', 'English', 'Computer Science'];
+      const cont = document.getElementById('lp-subject-chips');
+      if (!cont) return;
+      cont.innerHTML = '';
+      subjects.forEach(sub => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'chip';
+        btn.style.fontSize = '11px';
+        btn.style.padding = '3px 8px';
+        btn.textContent = sub;
+        btn.onclick = () => {
+          document.getElementById('lp-subject').value = sub;
+          syncSubjectChips(sub);
+          validateLessonInputs();
+        };
+        cont.appendChild(btn);
+      });
+      syncSubjectChips(document.getElementById('lp-subject').value);
+    }
+
+    function syncSubjectChips(activeSubject) {
+      const cont = document.getElementById('lp-subject-chips');
+      if (!cont) return;
+      cont.querySelectorAll('.chip').forEach(c => {
+        if (c.textContent === activeSubject) {
+          c.classList.add('active');
+        } else {
+          c.classList.remove('active');
+        }
+      });
+    }
+
+    function filterPresetChips(query) {
+      const q = query.toLowerCase().trim();
+      document.querySelectorAll('.preset-chip').forEach(chip => {
+        const txt = chip.textContent.toLowerCase();
+        chip.style.display = txt.includes(q) ? 'inline-flex' : 'none';
+      });
+    }
+    window.filterPresetChips = filterPresetChips;
+
+    function checkSavedPlanBanner() {
+      const saved = localStorage.getItem('edubridge_lastplan');
+      const banner = document.getElementById('lp-restore-banner');
+      if (saved && banner) {
+        banner.style.display = 'flex';
+      }
+    }
+
+    function restoreLastPlan() {
+      try {
+        const plan = JSON.parse(localStorage.getItem('edubridge_lastplan'));
+        if (plan) {
+          APP.lesson = plan;
+          renderPlanOutput(plan);
+          showScreen('screen-lp2');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    window.restoreLastPlan = restoreLastPlan;
+
+    function dismissLastPlanBanner() {
+      const banner = document.getElementById('lp-restore-banner');
+      if (banner) banner.style.display = 'none';
+    }
+    window.dismissLastPlanBanner = dismissLastPlanBanner;
+
+    function checkErrorBookReminder() {
+      const rem = document.getElementById('lp-errorbook-reminder');
+      const text = document.getElementById('lp-eb-rem-text');
+      const chips = document.getElementById('lp-eb-chips-list');
+      if (!rem) return;
+
+      if (APP.errorBook.length > 0) {
+        rem.style.display = 'block';
+        text.textContent = `📖 ${APP.errorBook.length} topic(s) from Error Book pending — add to Warm-up?`;
+        chips.innerHTML = '';
+        APP.errorBook.slice(0, 3).forEach(item => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'btn-icon';
+          btn.style.fontSize = '11px';
+          btn.style.padding = '2px 8px';
+          btn.innerHTML = `+ Add "${item.topic.slice(0, 20)}"`;
+          btn.onclick = () => {
+            APP.lesson.warmUpTopic = item.topic;
+            btn.innerHTML = `✓ Added "${item.topic.slice(0, 20)}"`;
+            btn.style.borderColor = 'var(--gold)';
+            btn.style.color = 'var(--gold)';
+          };
+          chips.appendChild(btn);
+        });
+      } else {
+        rem.style.display = 'none';
+      }
+    }
+
+    function validateLessonInputs() {
+      const minutesInput = document.getElementById('lp-minutes');
+      const topicInput = document.getElementById('lp-topic');
+      const subjectInput = document.getElementById('lp-subject');
+      const errBox = document.getElementById('lp-val-error');
+      const btn = document.getElementById('btn-generate-lp');
+
+      const minutes = parseInt(minutesInput.value, 10);
+      const topic = topicInput.value.trim();
+      const subject = subjectInput.value.trim();
+
+      errBox.style.display = 'none';
+      let isValid = true;
+
+      if (!minutes || isNaN(minutes) || minutes < 1 || minutes > 180) {
+        errBox.textContent = '⚠️ Enter valid minutes between 1 and 180';
+        errBox.style.display = 'block';
+        isValid = false;
+      } else if (!topic || !subject) {
+        errBox.textContent = '⚠️ Topic and Subject are required';
+        errBox.style.display = 'block';
+        isValid = false;
+      }
+
+      btn.disabled = !isValid;
+      return isValid;
+    }
+    window.validateLessonInputs = validateLessonInputs;
+
+    function generateLessonPlan() {
+      if (!validateLessonInputs()) return;
+
+      const grade = document.getElementById('lp-grade').value;
+      const subject = document.getElementById('lp-subject').value;
+      const topic = document.getElementById('lp-topic').value.trim();
+      const minutes = parseInt(document.getElementById('lp-minutes').value, 10);
+      const pedagogy = document.getElementById('lp-pedagogy').value;
+
+      const sections = calculatePlanSections(minutes, pedagogy, APP.lesson.warmUpTopic);
+
+      // Verify exact sum in JS
+      const sum = sections.reduce((acc, s) => acc + s.minutes, 0);
+      if (sum !== minutes) {
+        sections[sections.length - 1].minutes += (minutes - sum);
+      }
+
+      APP.lesson = {
+        grade, subject, topic, minutes, pedagogy, sections,
+        warmUpTopic: APP.lesson.warmUpTopic
+      };
+
+      // Save to localStorage
+      localStorage.setItem('edubridge_lastplan', JSON.stringify(APP.lesson));
+
+      renderPlanOutput(APP.lesson);
+      showScreen('screen-lp2');
+    }
+    window.generateLessonPlan = generateLessonPlan;
+
+    function renderPlanOutput(plan) {
+      document.getElementById('lp2-title').textContent = `${plan.subject} — ${plan.topic}`;
+
+      // Metadata row
+      const metaRow = document.getElementById('lp2-meta-row');
+      const pedLabel = PEDAGOGY_CONFIGS[plan.pedagogy]?.label || '5E Constructivist';
+      metaRow.innerHTML = `
+        <span class="step-pill" style="color:var(--text);">${plan.grade}</span>
+        <span class="step-pill" style="color:var(--text);">${plan.subject}</span>
+        <span class="step-pill" style="color:var(--gold); font-weight:700;">${plan.minutes} min</span>
+        <span class="step-pill" style="color:var(--text);">${pedLabel}</span>
+      `;
+
+      // Render rows
+      renderPlanSectionsTable(plan.sections, plan.minutes);
+    }
+
+    function renderPlanSectionsTable(sections, totalMinutes) {
+      const list = document.getElementById('lp2-sections-list');
+      list.innerHTML = '';
+
+      let runningSum = 0;
+      sections.forEach((sec, idx) => {
+        runningSum += sec.minutes;
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.alignItems = 'center';
+        row.style.justifyContent = 'space-between';
+        row.style.padding = '8px 6px';
+        row.style.borderBottom = '1px solid var(--border)';
+        row.style.gap = '8px';
+
+        row.innerHTML = `
+          <div style="font-size:16px;">${sec.icon || '📌'}</div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-weight:700; font-size:13px; color:var(--text);">${sec.name}</div>
+            <div style="font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${sec.desc}</div>
+          </div>
+          <div style="background:rgba(232,180,80,0.15); border:1px solid var(--gold); color:var(--gold); font-weight:700; font-size:12px; padding:2px 8px; border-radius:12px; min-width:34px; text-align:center;">
+            ${sec.minutes}m
+          </div>
+          <button class="btn-icon" title="Mark as incomplete — save to Error Book" onclick="markSectionToErrorBook('${encodeURIComponent(sec.name)}')">
+            📖
+          </button>
+        `;
+        list.appendChild(row);
+      });
+
+      // Update total badge
+      const totalBadge = document.getElementById('lp2-total-badge');
+      const runningLabel = document.getElementById('lp2-running-total-label');
+      runningLabel.textContent = `Total: ${runningSum}m / ${totalMinutes}m`;
+
+      if (runningSum === totalMinutes) {
+        totalBadge.textContent = `${runningSum}m ✓ Exact`;
+        totalBadge.style.color = 'var(--success)';
+        totalBadge.style.background = 'var(--s-bg)';
+        runningLabel.style.color = 'var(--gold)';
+      } else {
+        totalBadge.textContent = `${runningSum}m / ${totalMinutes}m`;
+        totalBadge.style.color = 'var(--danger)';
+        totalBadge.style.background = 'var(--d-bg)';
+        runningLabel.style.color = 'var(--danger)';
+      }
+    }
+
+    function handleAddSectionToPlan() {
+      const nameInput = document.getElementById('add-sec-name');
+      const minsInput = document.getElementById('add-sec-mins');
+
+      const name = nameInput.value.trim();
+      const mins = parseInt(minsInput.value, 10);
+
+      if (!name || !mins || isNaN(mins) || mins < 1) return;
+
+      const currentTotal = APP.lesson.minutes;
+      // Add section and proportionally adjust
+      const newSection = {
+        name: name,
+        icon: '⚡',
+        desc: 'Custom instructional activity',
+        minutes: mins
+      };
+
+      APP.lesson.sections.push(newSection);
+
+      // Re-normalize all other sections so total remains exactly APP.lesson.minutes
+      let remaining = currentTotal - mins;
+      if (remaining >= APP.lesson.sections.length - 1) {
+        const others = APP.lesson.sections.slice(0, -1);
+        const oldOthersSum = others.reduce((a, s) => a + s.minutes, 0);
+        let alloc = 0;
+        for (let i = 0; i < others.length; i++) {
+          let m = Math.floor(remaining * (others[i].minutes / oldOthersSum));
+          if (m < 1) m = 1;
+          others[i].minutes = m;
+          alloc += m;
+        }
+        others[others.length - 1].minutes += (remaining - alloc);
+      } else {
+        // Just keep exact sum
+        APP.lesson.minutes += mins;
+      }
+
+      renderPlanSectionsTable(APP.lesson.sections, APP.lesson.minutes);
+      localStorage.setItem('edubridge_lastplan', JSON.stringify(APP.lesson));
+
+      nameInput.value = '';
+      minsInput.value = '';
+    }
+    window.handleAddSectionToPlan = handleAddSectionToPlan;
+
+    function copyLessonPlan() {
+      const p = APP.lesson;
+      if (!p || !p.sections) return;
+      let text = `EDUBRIDGE AI — LESSON PLAN\n`;
+      text += `Topic: ${p.topic}\nSubject: ${p.subject} | Grade: ${p.grade} | Total: ${p.minutes}m\n`;
+      text += `Pedagogy: ${PEDAGOGY_CONFIGS[p.pedagogy]?.label || p.pedagogy}\n\n`;
+      p.sections.forEach(s => {
+        text += `• [${s.minutes}m] ${s.name} — ${s.desc}\n`;
+      });
+      text += `\nTotal: ${p.minutes}m Verified.`;
+
+      const btn = document.getElementById('btn-copy-plan');
+      const showFeedback = () => {
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        btn.style.color = 'var(--success)';
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.style.color = 'var(--text)';
+        }, 1800);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showFeedback).catch(() => {
+          fallbackClipboardCopy(text);
+          showFeedback();
+        });
+      } else {
+        fallbackClipboardCopy(text);
+        showFeedback();
+      }
+    }
+    window.copyLessonPlan = copyLessonPlan;
+
+    function fallbackClipboardCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    function markSectionToErrorBook(secNameEncoded) {
+      const secName = decodeURIComponent(secNameEncoded);
+      const note = prompt(`Mark "${secName}" as incomplete. Add note (optional):`, 'Class struggled with conceptual recall');
+      if (note !== null) {
+        APP.errorBook.unshift({
+          id: 'EB_' + Date.now(),
+          subject: APP.lesson.subject || 'General',
+          grade: APP.lesson.grade || 'Grade 9',
+          topic: `${APP.lesson.topic} (${secName})`,
+          note: note || 'Marked from Lesson Plan',
+          date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+        });
+        localStorage.setItem('edubridge_errorbook', JSON.stringify(APP.errorBook));
+        updateErrorBookBadges();
+        alert(`Saved "${secName}" to Error Book ✓`);
+      }
+    }
+    window.markSectionToErrorBook = markSectionToErrorBook;
+
+    // =========================================================
+    // 10. ERROR BOOK MODAL MANAGEMENT
+    // =========================================================
+    function openErrorBookModal() {
+      renderErrorBookEntries();
+      document.getElementById('modal-errorbook').classList.add('active');
+    }
+    window.openErrorBookModal = openErrorBookModal;
+
+    function closeErrorBookModal() {
+      document.getElementById('modal-errorbook').classList.remove('active');
+    }
+    window.closeErrorBookModal = closeErrorBookModal;
+
+    function closeModalOnOverlay(e) {
+      if (e.target.id === 'modal-errorbook') {
+        closeErrorBookModal();
+      }
+    }
+    window.closeModalOnOverlay = closeModalOnOverlay;
+
+    function renderErrorBookEntries() {
+      const list = document.getElementById('eb-entry-list');
+      if (!list) return;
+
+      if (APP.errorBook.length === 0) {
+        list.innerHTML = `
+          <div style="text-align:center; padding:30px 0; color:var(--muted); font-size:14px;">
+            No missed topics yet 🎉
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = '';
+      APP.errorBook.forEach((item, index) => {
+        const row = document.createElement('div');
+        row.className = 'card';
+        row.style.padding = '10px 12px';
+        row.style.background = 'var(--surface)';
+        row.style.display = 'flex';
+        row.style.alignItems = 'flex-start';
+        row.style.justifyContent = 'space-between';
+        row.style.gap = '8px';
+
+        row.innerHTML = `
+          <div style="flex:1;">
+            <div style="display:flex; gap:6px; align-items:center; margin-bottom:4px; flex-wrap:wrap;">
+              <span style="background:rgba(232,180,80,0.15); border:1px solid var(--gold); color:var(--gold); font-size:10px; font-weight:700; padding:1px 6px; border-radius:10px;">
+                ${item.subject}
+              </span>
+              <span class="step-pill" style="font-size:10px; padding:1px 6px;">${item.grade}</span>
+              <span style="font-size:10px; color:var(--muted);">${item.date || 'Recent'}</span>
+            </div>
+            <div style="font-weight:700; font-size:13px; color:var(--text);">${item.topic}</div>
+            ${item.note ? `<div style="font-size:11px; font-style:italic; color:var(--muted); margin-top:2px;">"${item.note}"</div>` : ''}
+          </div>
+          <button onclick="deleteErrorBookEntry(${index})" class="btn-icon" style="padding:2px 6px; font-size:12px; color:var(--danger);" title="Remove">✕</button>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function deleteErrorBookEntry(index) {
+      APP.errorBook.splice(index, 1);
+      localStorage.setItem('edubridge_errorbook', JSON.stringify(APP.errorBook));
+      renderErrorBookEntries();
+      updateErrorBookBadges();
+      if (document.getElementById('screen-lp1').classList.contains('active')) {
+        checkErrorBookReminder();
+      }
+    }
+    window.deleteErrorBookEntry = deleteErrorBookEntry;
+
+    function handleManualAddErrorBook() {
+      const subject = document.getElementById('eb-add-subject').value;
+      const grade = document.getElementById('eb-add-grade').value;
+      const topicInput = document.getElementById('eb-add-topic');
+      const noteInput = document.getElementById('eb-add-note');
+
+      const topic = topicInput.value.trim();
+      const note = noteInput.value.trim();
+
+      if (!topic) {
+        alert('Please enter a topic name');
+        return;
+      }
+
+      APP.errorBook.unshift({
+        id: 'EB_' + Date.now(),
+        subject, grade, topic, note,
+        date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+      });
+      localStorage.setItem('edubridge_errorbook', JSON.stringify(APP.errorBook));
+
+      topicInput.value = '';
+      noteInput.value = '';
+      renderErrorBookEntries();
+      updateErrorBookBadges();
+    }
+    window.handleManualAddErrorBook = handleManualAddErrorBook;
+
+    function updateErrorBookBadges() {
+      const count = APP.errorBook.length;
+      document.querySelectorAll('.badge-errorbook').forEach(b => {
+        b.textContent = count;
+      });
+    }
+
+    // =========================================================
+    // 11. COURSE SELECTION (SCREEN 2S)
+    // =========================================================
+    const COURSES_DATA = {
+      academics: [
+        { id: 'math', title: '📐 Mathematics (Class 9-10)', desc: 'Algebra, Geometry, Zeros & Polynomials' },
+        { id: 'sci', title: '🔬 Science (Class 9-10)', desc: 'Physics, Chemistry & Biology basics' },
+        { id: 'hist', title: '📜 History & Civics (SSC)', desc: 'Indian Freedom Movement & Constitution' },
+        { id: 'geo', title: '🌍 Geography (Maharashtra)', desc: 'Physiography, Climate & Resources' },
+        { id: 'eng', title: '📖 English Literature', desc: 'Poetry, Prose & Grammar mastery' },
+        { id: 'stats', title: '🔢 Algebra & Statistics', desc: 'Central Tendency & Probability' }
+      ],
+      tech: [
+        { id: 'py', title: '💻 Python Programming', desc: 'Syntax, Data Structures & Automation' },
+        { id: 'web', title: '🌐 Web Development', desc: 'HTML5, CSS3 & JavaScript fundamentals' },
+        { id: 'ml', title: '🤖 ML Basics', desc: 'Supervised Learning & Model evaluation' },
+        { id: 'app', title: '📱 App Dev (No-Code)', desc: 'Rapid prototyping & UX design' },
+        { id: 'linux', title: '🐧 Linux & CLI', desc: 'Bash scripting, Permissions & Git' },
+        { id: 'sql', title: '🗄️ SQL & Databases', desc: 'Queries, Joins, Indexing & Schemas' }
+      ],
+      data: [
+        { id: 'da', title: '📊 Data Analysis', desc: 'Pandas, NumPy & Exploratory Analytics' },
+        { id: 'viz', title: '📈 Data Viz', desc: 'Charts, Dashboard storytelling' },
+        { id: 'ai', title: '🤖 AI & Deep Learning', desc: 'Neural Networks & Computer Vision' },
+        { id: 'dstats', title: '📉 Statistics', desc: 'Hypothesis testing & Distributions' }
+      ],
+      commerce: [
+        { id: 'acc', title: '💰 Accountancy', desc: 'Double entry, Journal & Balance Sheet' },
+        { id: 'bst', title: '📋 Business Studies', desc: 'Management Principles & Marketing' },
+        { id: 'eco', title: '🏦 Economics Basics', desc: 'Micro & Macroeconomics essentials' },
+        { id: 'tally', title: '🗂️ Tally Prime', desc: 'GST, Inventory & Voucher entries' }
+      ],
+      science: [
+        { id: 'chem', title: '⚗️ Chemistry', desc: 'Chemical reactions & Periodic Table' },
+        { id: 'bio', title: '🧬 Biology', desc: 'Genetics, Ecology & Cell Division' },
+        { id: 'phy', title: '⚡ Physics', desc: 'Optics, Electricity & Mechanics' },
+        { id: 'evs', title: '🌱 Environmental Science', desc: 'Ecosystems & Sustainable Energy' }
+      ]
+    };
+
+    let selectedCourseItem = null;
+
+    function filterCourseCategory(catKey, tabBtn) {
+      document.querySelectorAll('#course-category-tabs .chip').forEach(c => c.classList.remove('active'));
+      if (tabBtn) tabBtn.classList.add('active');
+
+      const grid = document.getElementById('course-grid');
+      grid.innerHTML = '';
+      const list = COURSES_DATA[catKey] || COURSES_DATA.academics;
+
+      list.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'card course-card';
+        card.style.cursor = 'pointer';
+        card.style.padding = '14px 12px';
+        card.style.border = '1.5px solid var(--border)';
+        card.style.transition = 'all 0.15s ease';
+
+        card.innerHTML = `
+          <div style="font-weight:700; font-size:13px; margin-bottom:4px; line-height:1.3;">${c.title}</div>
+          <div style="font-size:11px; color:var(--muted); line-height:1.35;">${c.desc}</div>
+        `;
+
+        card.onclick = () => {
+          document.querySelectorAll('.course-card').forEach(cc => {
+            cc.style.border = '1.5px solid var(--border)';
+            cc.style.boxShadow = 'none';
+          });
+          card.style.border = '2px solid var(--gold)';
+          card.style.boxShadow = '0 0 14px rgba(232,180,80,0.2)';
+          selectedCourseItem = c.title;
+          document.getElementById('btn-select-course-next').disabled = false;
+        };
+
+        grid.appendChild(card);
+      });
+    }
+    window.filterCourseCategory = filterCourseCategory;
+
+    function handleCourseSelected() {
+      if (!selectedCourseItem) return;
+      APP.student.course = selectedCourseItem;
+      document.getElementById('prof-course-pill').textContent = selectedCourseItem;
+      showScreen('screen-3s');
+    }
+    window.handleCourseSelected = handleCourseSelected;
+
+    // =========================================================
+    // 12. PROFICIENCY CHECK (SCREEN 3S)
+    // =========================================================
+    function selectProficiency(level, cardEl) {
+      APP.student.proficiency = level;
+      document.querySelectorAll('.prof-card').forEach(c => {
+        c.style.border = '1.5px solid var(--border)';
+        c.style.boxShadow = 'none';
+      });
+      cardEl.style.border = '2px solid var(--gold)';
+      cardEl.style.boxShadow = '0 0 16px rgba(232,180,80,0.2)';
+
+      const descBox = document.getElementById('prof-desc-card');
+      descBox.style.display = 'block';
+
+      if (level === 'easy') {
+        descBox.textContent = '🆕 Starting from scratch — 10 easy diagnostic questions';
+      } else if (level === 'medium') {
+        descBox.textContent = '📚 Testing fundamentals first';
+      } else if (level === 'mixed') {
+        descBox.textContent = '⚡ Mixed quiz to find exact gaps';
+      } else if (level === 'hard') {
+        descBox.textContent = '🎯 Hard mode — we find what you\'re missing';
+      }
+
+      document.getElementById('btn-start-diag').disabled = false;
+    }
+    window.selectProficiency = selectProficiency;
+
+    // =========================================================
+    // 13. ADAPTIVE QUIZ (SCREEN 4S)
+    // =========================================================
+    function startAdaptiveQuiz() {
+      // Pick 10 randomized questions with shuffled options
+      const picked = getRandomQuestions(QUESTION_POOL, 10, APP.quiz.shownIds);
+      
+      // Update shownIds in state and localStorage
+      picked.forEach(q => {
+        if (!APP.quiz.shownIds.includes(q.id)) APP.quiz.shownIds.push(q.id);
+      });
+      localStorage.setItem('edubridge_shownids', JSON.stringify(APP.quiz.shownIds));
+
+      APP.quiz.questions = picked;
+      APP.quiz.currentIndex = 0;
+      APP.quiz.answers = [];
+      APP.quiz.correct = 0;
+      APP.quiz.wrong = 0;
+      APP.quiz.skipped = 0;
+      APP.quiz.currentDifficulty = APP.student.proficiency === 'hard' ? 'hard' : (APP.student.proficiency === 'easy' ? 'easy' : 'medium');
+
+      showScreen('screen-4s');
+      renderCurrentQuizQuestion();
+    }
+    window.startAdaptiveQuiz = startAdaptiveQuiz;
+
+    function renderCurrentQuizQuestion() {
+      clearInterval(APP.quiz.timerInterval);
+      const idx = APP.quiz.currentIndex;
+      const total = APP.quiz.questions.length;
+      const q = APP.quiz.questions[idx];
+
+      // Update progress bar (60% to 80% range)
+      const pct = 60 + Math.round((idx / total) * 20);
+      document.getElementById('quiz-progress-fill').style.width = pct + '%';
+
+      // Q counter
+      document.getElementById('quiz-counter').textContent = `Q ${idx + 1} / ${total}`;
+
+      // Difficulty tag & color
+      const diffPill = document.getElementById('quiz-diff-pill');
+      const diff = q.diff || APP.quiz.currentDifficulty;
+      diffPill.textContent = diff.toUpperCase();
+      if (diff === 'easy') {
+        diffPill.style.background = 'var(--s-bg)';
+        diffPill.style.color = 'var(--success)';
+      } else if (diff === 'medium') {
+        diffPill.style.background = 'var(--w-bg)';
+        diffPill.style.color = 'var(--warning)';
+      } else {
+        diffPill.style.background = 'rgba(124,111,232,0.15)';
+        diffPill.style.color = 'var(--violet)';
+      }
+
+      // Topic tag
+      document.getElementById('quiz-topic-tag').textContent = `Polynomials · ${q.topic || 'Core Concept'}`;
+
+      // Question text
+      document.getElementById('quiz-question-text').textContent = q.q;
+
+      // Reset options & buttons
+      const container = document.getElementById('quiz-options-container');
+      container.innerHTML = '';
+      document.getElementById('quiz-explanation-box').style.display = 'none';
+      document.getElementById('quiz-skip-alert').style.display = 'none';
+      document.getElementById('btn-quiz-next').style.display = 'none';
+      document.getElementById('btn-quiz-skip').style.display = 'inline-block';
+
+      q.opts.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'quiz-opt-btn';
+        btn.innerHTML = `
+          <span style="display:inline-block; width:18px; text-align:center; color:var(--muted); font-size:12px;">○</span>
+          <span style="flex:1;">${opt.t}</span>
+        `;
+        btn.onclick = () => handleSelectOption(btn, opt, q);
+        container.appendChild(btn);
+      });
+
+      // 60-second Timer
+      startQuizTimer();
+    }
+
+    function startQuizTimer() {
+      APP.quiz.timerSec = 60;
+      updateTimerDisplay();
+      APP.quiz.timerInterval = setInterval(() => {
+        APP.quiz.timerSec--;
+        updateTimerDisplay();
+        if (APP.quiz.timerSec <= 0) {
+          clearInterval(APP.quiz.timerInterval);
+          handleQuizTimeout();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const sec = APP.quiz.timerSec;
+      const minStr = String(Math.floor(sec / 60)).padStart(2, '0');
+      const secStr = String(sec % 60).padStart(2, '0');
+      const textEl = document.getElementById('quiz-timer-text');
+      const pill = document.getElementById('quiz-timer-pill');
+      textEl.textContent = `${minStr}:${secStr}`;
+
+      if (sec <= 10) {
+        pill.style.background = 'var(--d-bg)';
+        pill.style.borderColor = 'var(--danger)';
+        pill.style.color = 'var(--danger)';
+      } else {
+        pill.style.background = 'rgba(232,180,80,0.15)';
+        pill.style.borderColor = 'var(--gold)';
+        pill.style.color = 'var(--gold)';
+      }
+    }
+
+    function handleSelectOption(clickedBtn, selectedOpt, question) {
+      clearInterval(APP.quiz.timerInterval);
+
+      // Disable all option buttons
+      const buttons = document.querySelectorAll('.quiz-opt-btn');
+      buttons.forEach(b => b.disabled = true);
+
+      const isCorrect = selectedOpt.c === true;
+
+      // Instant highlight within 150ms
+      setTimeout(() => {
+        buttons.forEach(b => {
+          const optText = b.querySelector('span:nth-child(2)').textContent;
+          const matchedOpt = question.opts.find(o => o.t === optText);
+          if (matchedOpt && matchedOpt.c) {
+            b.classList.add('correct');
+            b.querySelector('span:first-child').textContent = '✅';
+          }
+        });
+
+        if (!isCorrect) {
+          clickedBtn.classList.add('wrong');
+          clickedBtn.querySelector('span:first-child').textContent = '❌';
+          APP.quiz.wrong++;
+          // Adaptive logic: wrong -> next picks easier
+          APP.quiz.currentDifficulty = 'easy';
+          // Save missed question to Error Book
+          APP.errorBook.unshift({
+            id: 'EB_' + Date.now(),
+            subject: 'Mathematics',
+            grade: APP.student.grade || 'Grade 9',
+            topic: question.topic || question.q.slice(0, 30),
+            note: `Answered: ${selectedOpt.t} | Correct: ${question.opts.find(o => o.c).t}`,
+            date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+          });
+          localStorage.setItem('edubridge_errorbook', JSON.stringify(APP.errorBook));
+          updateErrorBookBadges();
+        } else {
+          APP.quiz.correct++;
+          // Adaptive logic: correct -> next picks harder
+          APP.quiz.currentDifficulty = 'hard';
+        }
+
+        // Show explanation
+        const expBox = document.getElementById('quiz-explanation-box');
+        expBox.innerHTML = `💡 <b>Explanation:</b> ${question.exp}`;
+        expBox.style.display = 'block';
+
+        // Record Answer Evidence
+        APP.quiz.answers.push({
+          qId: question.id,
+          question: question.q,
+          topic: question.topic || 'General',
+          selectedAnswer: selectedOpt.t,
+          correctAnswer: question.opts.find(o => o.c).t,
+          isCorrect: isCorrect,
+          skipped: false
+        });
+
+        // Show Next button, hide skip
+        document.getElementById('btn-quiz-skip').style.display = 'none';
+        document.getElementById('btn-quiz-next').style.display = 'inline-flex';
+      }, 50);
+    }
+
+    function handleQuizSkip() {
+      clearInterval(APP.quiz.timerInterval);
+      const q = APP.quiz.questions[APP.quiz.currentIndex];
+      APP.quiz.skipped++;
+
+      // Highlight correct answer
+      const buttons = document.querySelectorAll('.quiz-opt-btn');
+      buttons.forEach(b => {
+        b.disabled = true;
+        const optText = b.querySelector('span:nth-child(2)').textContent;
+        const matchedOpt = q.opts.find(o => o.t === optText);
+        if (matchedOpt && matchedOpt.c) {
+          b.classList.add('correct');
+          b.querySelector('span:first-child').textContent = '✅';
+        }
+      });
+
+      // Show purple skip toast and save to Error Book
+      const skipAlert = document.getElementById('quiz-skip-alert');
+      skipAlert.style.display = 'block';
+
+      APP.errorBook.unshift({
+        id: 'EB_' + Date.now(),
+        subject: 'Mathematics',
+        grade: APP.student.grade || 'Grade 9',
+        topic: q.topic || q.q.slice(0, 30),
+        note: 'Skipped during Diagnostic',
+        date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+      });
+      localStorage.setItem('edubridge_errorbook', JSON.stringify(APP.errorBook));
+      updateErrorBookBadges();
+
+      document.getElementById('btn-quiz-skip').style.display = 'none';
+      document.getElementById('btn-quiz-next').style.display = 'inline-flex';
+    }
+    window.handleQuizSkip = handleQuizSkip;
+
+    function handleQuizTimeout() {
+      handleQuizSkip();
+    }
+
+    function handleQuizNext() {
+      APP.quiz.currentIndex++;
+      if (APP.quiz.currentIndex < APP.quiz.questions.length) {
+        renderCurrentQuizQuestion();
+      } else {
+        generateGapReport();
+      }
+    }
+    window.handleQuizNext = handleQuizNext;
+    window.generateGapReport = generateGapReport;
+
+    // =========================================================
+    // 14. GAP REPORT (SCREEN 5S)
+    // =========================================================
+    function generateGapReport() {
+      clearInterval(APP.quiz.timerInterval);
+
+      const total = APP.quiz.questions.length;
+      const correct = APP.quiz.correct;
+      const wrong = APP.quiz.wrong;
+      const skipped = APP.quiz.skipped;
+
+      const pct = Math.round((correct / total) * 100);
+      APP.report.score = pct;
+
+      // Score Ring Thresholds: ≥75% success, 50-74% warning, <50% danger
+      const ring = document.getElementById('report-score-ring');
+      const scoreNum = document.getElementById('report-score-num');
+      scoreNum.textContent = pct + '%';
+
+      let ringColor = 'var(--danger)';
+      if (pct >= 75) {
+        ringColor = 'var(--success)';
+      } else if (pct >= 50) {
+        ringColor = 'var(--warning)';
+      }
+      ring.style.setProperty('--pct', pct);
+      ring.style.setProperty('--ring-color', ringColor);
+
+      document.getElementById('report-stats-row').textContent = `${correct} correct · ${wrong} wrong · ${skipped} skipped`;
+
+      // Evidence Section (ONLY answered questions, skipped NOT shown)
+      const evList = document.getElementById('report-evidence-list');
+      evList.innerHTML = '';
+      const answeredList = APP.quiz.answers.filter(a => !a.skipped);
+
+      if (answeredList.length === 0) {
+        evList.innerHTML = `<div style="font-size:12px; color:var(--muted);">No questions answered directly.</div>`;
+      } else {
+        answeredList.forEach(item => {
+          const row = document.createElement('div');
+          row.style.display = 'flex';
+          row.style.alignItems = 'center';
+          row.style.justifyContent = 'space-between';
+          row.style.fontSize = '12px';
+          row.style.padding = '4px 0';
+          row.style.borderBottom = '1px solid var(--border)';
+
+          const icon = item.isCorrect ? '✅' : '❌';
+          const truncatedQ = item.question.length > 55 ? item.question.slice(0, 52) + '...' : item.question;
+          const badgeColor = item.isCorrect ? 'var(--success)' : 'var(--danger)';
+
+          row.innerHTML = `
+            <div style="display:flex; align-items:center; gap:6px; flex:1; overflow:hidden;">
+              <span>${icon}</span>
+              <span style="color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${truncatedQ}</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:4px; margin-left:8px;">
+              <span style="color:var(--muted);">→</span>
+              <span style="color:${badgeColor}; font-weight:700;">${item.selectedAnswer}</span>
+            </div>
+          `;
+          evList.appendChild(row);
+        });
+      }
+
+      // Group into Categories:
+      const topicsMap = {};
+      APP.quiz.answers.forEach(a => {
+        if (!topicsMap[a.topic]) {
+          topicsMap[a.topic] = { total: 0, correct: 0 };
+        }
+        topicsMap[a.topic].total++;
+        if (a.isCorrect) topicsMap[a.topic].correct++;
+      });
+
+      const strong = [];
+      const moderate = [];
+      const weak = [];
+      const allKnownTopics = [
+        'Polynomial Types', 'Polynomial Degrees', 'Polynomial Definitions',
+        'Zeros of Polynomials', 'Relationship between Zeros', 'Factor Theorem',
+        'Remainder Theorem', 'Algebraic Identities', 'Quadratic Factorization',
+        'Fundamental Theorem', 'Real Zeros'
+      ];
+      const assessedTopics = Object.keys(topicsMap);
+      const notAssessed = allKnownTopics.filter(t => !assessedTopics.includes(t));
+
+      assessedTopics.forEach(t => {
+        const perf = Math.round((topicsMap[t].correct / topicsMap[t].total) * 100);
+        if (perf >= 75) strong.push(t);
+        else if (perf >= 50) moderate.push(t);
+        else weak.push(t);
+      });
+
+      renderCategoryBox('cat-strong-list', strong, 'No topics mastered yet');
+      renderCategoryBox('cat-moderate-list', moderate, 'None in intermediate status');
+      renderCategoryBox('cat-weak-list', weak, 'Great! No immediate critical gaps');
+      renderCategoryBox('cat-notassessed-list', notAssessed.slice(0, 4), 'All primary topics covered');
+
+      // Animated Topic Bars
+      renderTopicBars(topicsMap);
+
+      // Roadmap Card
+      renderRoadmap(weak, moderate, notAssessed);
+
+      showScreen('screen-5s');
+    }
+
+    function renderCategoryBox(elementId, items, emptyText) {
+      const el = document.getElementById(elementId);
+      if (!items || items.length === 0) {
+        el.innerHTML = `<span style="color:var(--muted); font-size:12px;">${emptyText}</span>`;
+      } else {
+        el.innerHTML = items.map(item => `
+          <span class="chip" style="font-size:11px; padding:3px 9px; margin:2px;">${item}</span>
+        `).join(' ');
+      }
+    }
+
+    function renderTopicBars(topicsMap) {
+      const cont = document.getElementById('report-topic-bars');
+      cont.innerHTML = '';
+      const keys = Object.keys(topicsMap);
+
+      if (keys.length === 0) {
+        cont.innerHTML = `<div style="font-size:12px; color:var(--muted);">No topic telemetry available.</div>`;
+        return;
+      }
+
+      keys.forEach(k => {
+        const t = topicsMap[k];
+        const pct = Math.round((t.correct / t.total) * 100);
+        let barColor = 'var(--danger)';
+        if (pct >= 70) barColor = 'var(--success)';
+        else if (pct >= 45) barColor = 'var(--warning)';
+
+        const barRow = document.createElement('div');
+        barRow.innerHTML = `
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
+            <span>${k}</span>
+            <span style="font-weight:700; color:${barColor};">${pct}%</span>
+          </div>
+          <div style="background:var(--surface); height:6px; border-radius:3px; overflow:hidden;">
+            <div class="topic-anim-bar" style="background:${barColor}; height:6px; width:0%; border-radius:3px; transition:width 0.6s cubic-bezier(0.16, 1, 0.3, 1);"></div>
+          </div>
+        `;
+        cont.appendChild(barRow);
+
+        setTimeout(() => {
+          const fill = barRow.querySelector('.topic-anim-bar');
+          if (fill) fill.style.width = pct + '%';
+        }, 80);
+      });
+    }
+
+    function renderRoadmap(weak, moderate, notAssessed) {
+      const cont = document.getElementById('report-roadmap-steps');
+      cont.innerHTML = '';
+
+      let stepNum = 1;
+      if (weak.length > 0) {
+        cont.innerHTML += `
+          <div style="display:flex; gap:8px; align-items:flex-start;">
+            <span style="background:var(--danger); color:white; width:20px; height:20px; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;">${stepNum++}</span>
+            <div><b>Remediate Core Gaps:</b> Deep-dive review on ${weak.slice(0, 2).join(' & ')} to rebuild foundation.</div>
+          </div>
+        `;
+      }
+
+      if (moderate.length > 0) {
+        cont.innerHTML += `
+          <div style="display:flex; gap:8px; align-items:flex-start;">
+            <span style="background:var(--warning); color:#0F0E17; width:20px; height:20px; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;">${stepNum++}</span>
+            <div><b>Reinforce Moderate Areas:</b> Practice targeted problem sets on ${moderate.slice(0, 2).join(' & ')}.</div>
+          </div>
+        `;
+      }
+
+      cont.innerHTML += `
+        <div style="display:flex; gap:8px; align-items:flex-start;">
+          <span style="background:var(--gold); color:#0F0E17; width:20px; height:20px; border-radius:50%; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;">${stepNum}</span>
+          <div><b>Unlock Advanced Mastery:</b> Tackle mock assessments and explore ${notAssessed[0] || 'Higher Degree Polynomials'}.</div>
+        </div>
+      `;
+    }
+
+    // =========================================================
+    // 15. DAILY STUDY PLAN HUB (SCREEN 6S)
+    // =========================================================
+    function renderHubGreeting() {
+      const studentName = APP.student.name || 'Scholar';
+      document.getElementById('hub-greeting-name').textContent = `Hello, ${studentName} 👋`;
+      document.getElementById('hub-course-title').textContent = APP.student.course || 'Mathematics (Class 9-10)';
+
+      // Error book preview in Hub
+      const previewCont = document.getElementById('hub-errorbook-preview');
+      if (APP.errorBook.length === 0) {
+        previewCont.innerHTML = `<div style="font-size:12px; color:var(--muted); padding:8px 0;">Nothing here yet — keep practicing!</div>`;
+      } else {
+        previewCont.innerHTML = '';
+        APP.errorBook.slice(0, 3).forEach(item => {
+          const row = document.createElement('div');
+          row.style.display = 'flex';
+          row.style.alignItems = 'center';
+          row.style.justifyContent = 'space-between';
+          row.style.fontSize = '12px';
+          row.style.padding = '6px 0';
+          row.style.borderBottom = '1px solid var(--border)';
+
+          row.innerHTML = `
+            <div style="flex:1; overflow:hidden;">
+              <div style="color:var(--danger); font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">❌ ${item.topic}</div>
+              <div style="color:var(--muted); font-size:11px;">${item.note || 'Review required'}</div>
+            </div>
+            <button class="btn-ghost" onclick="startAdaptiveQuiz()" style="padding:3px 8px; font-size:11px;">Practice Again →</button>
+          `;
+          previewCont.appendChild(row);
+        });
+      }
+    }
+
+    function toggleDayDone(dayIndex) {
+      const circle = document.getElementById(`day-circle-${dayIndex}`);
+      if (!circle) return;
+
+      const isDone = circle.textContent.trim() === '✓';
+      if (isDone) {
+        circle.textContent = '□';
+        circle.style.background = 'var(--surface)';
+        circle.style.borderColor = 'var(--border)';
+        circle.style.color = 'var(--muted)';
+      } else {
+        circle.textContent = '✓';
+        circle.style.background = 'var(--s-bg)';
+        circle.style.borderColor = 'var(--success)';
+        circle.style.color = 'var(--success)';
+      }
+    }
+    window.toggleDayDone = toggleDayDone;
+
+    function handleMockReminder() {
+      const btn = document.getElementById('btn-mock-remind');
+      btn.textContent = '✓ Reminder Set';
+      btn.style.color = 'var(--success)';
+      btn.style.borderColor = 'var(--success)';
+      setTimeout(() => {
+        btn.textContent = 'Remind Me';
+        btn.style.color = 'var(--gold)';
+        btn.style.borderColor = 'var(--gold)';
+      }, 2500);
+    }
+    window.handleMockReminder = handleMockReminder;
+
+    function openStudyTopicNotice() {
+      alert("Opening today's recommended study module on 'Factorization of Polynomials'. Check out the study flashcards and video notes!");
+    }
+    window.openStudyTopicNotice = openStudyTopicNotice;
+
+    function handleNavTab(tab) {
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('.nav-tab-btn')).find(b => b.textContent.toLowerCase().includes(tab));
+      if (activeBtn) activeBtn.classList.add('active');
+
+      if (tab === 'home') {
+        showScreen('screen-6s');
+      } else if (tab === 'study') {
+        showScreen('screen-2s');
+      } else if (tab === 'reports') {
+        showScreen('screen-5s');
+      } else if (tab === 'profile') {
+        showScreen('screen-1s');
+      }
+    }
+    window.handleNavTab = handleNavTab;
+
+    // =========================================================
+    // 16. INIT ON PAGE LOAD
+    // =========================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      initTeacherSubjects();
+      filterCourseCategory('academics');
+      updateThemeButtons();
+      updateErrorBookBadges();
+    });
+  </script>
+</body>
+</html>
